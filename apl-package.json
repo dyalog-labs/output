@@ -16,10 +16,10 @@
   os_lin: 1,
   os_mac: 1,
   os_win: 1,
-  project_url: "https://github.com/yiyus/dyalog-output",
+  project_url: "https://github.com/yiyus/output",
   source: "APLSource",
   tags: "text,html,output",
   tatin_version: "0.103.0",
   userCommandScript: "./output.dyalog",
-  version: "0.0.3",
+  version: "0.0.4",
 }

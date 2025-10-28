@@ -79,7 +79,7 @@
           r,←⊂''
           r,←⊂']HtmlR [-raw] <data>'
       :Case 'Plt'
-          r←⊂List[1].Desc
+          r←⊂List[2].Desc
           r,←⊂''
           r,←⊂']Plt <data> [-type={plotly|text}] [-config=<configuration>]'
           :If 0=level ⋄ r,←⊂']Plt -??  ⍝ for details and examples' ⋄ →0 ⋄ :EndIf
@@ -102,9 +102,20 @@
           r,←⊂'    ]Plt y2 y1 labels      ⍝ grouped vertical bars'
           r,←⊂'    ]Plt (y2 y1)labels     ⍝ stacked vertical bars'
       :Case 'Tbl'
-          r←⍬
-          r,←⊂'Display data as table using tabulator or textdraw'
-          r,←⊂'(TODO)'
+          r←⊂List[3].Desc
+          r,←⊂''
+          r,←⊂']Tbl <data> [-type={tabulator|text}] [-config=<configuration>]'
+          :If 0=level ⋄ r,←⊂']Tbl -??  ⍝ for details and examples' ⋄ →0 ⋄ :EndIf
+          r,←⊂'<data>           data to tabulate'
+          r,←⊂''
+          r,←⊂'-type=tabulator  tabulate using tabulator and HTMLRenderer or Ride'
+          r,←⊂'-type=text       tabulate using text'
+          r,←⊂''
+          r,←⊂'-config=         configuration for each column'
+          r,←⊂''
+          r,←⊂'Examples:'
+          r,←⊂'    ]Tbl y1 y2 y3               ⍝ table with 3 columns'
+          r,←⊂'    ]Tbl n←(one:y1 ⋄ other:y2)  ⍝ 2 columns with titles'
       :EndSelect
     ∇ 
     :EndSection

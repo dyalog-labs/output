@@ -2,41 +2,43 @@
 
     ⎕IO←1 ⋄ ⎕ML←1
 
-    plot←{
-        N←{9.1=42 ⎕ATX'⍵'}
-        A←{
-            2=≢⍴⍵:⍵
-            ~(N ⍵)∨(1=≡⍵)∧∧/N¨⍵:⍵
-            s←{
-                t←⍵ ⎕VGET(⊂'type' 'scatter')
-                (⊂'name')∊⍵.⎕NL-2:t ⍵.(name y x)
-                t({0::⍵.y ⋄ ⍵.(y x)}⍵)
-            }¨⍵
-            1<≢t←∪⊃¨s:⎕SIGNAL 6 ⋄ t←⊃t ⋄ s←⊃∘⌽¨s
-            ('bar'≡t)∧~0∊80|⎕DR¨s:⎕SIGNAL 11
-            1=≢s:⊃s
-            1=≢x←∪⊃∘⌽¨s:(⊂⍣⍺{⊃⍣(2=≢⍵)⊢¯1↓⍵}¨s),x
-            1=≢y←∪¯2⊃⍤↑¨s:y,(⊂⍣⍺{2=≢⍵:⊃⌽⍵ ⋄ (¯2↓⍵),¯1↑⍵}¨s)
-            s
-        }
-        ⍺←()
-        ~N ⍺:⍺ draw.plot 0 A ⍵
-        w←('stack'≡⍺ ⎕VGET⊂'barmode' 'group')A ⍵ ⋄ nl←⍺.⎕NL-2
-        ∧/'height' 'width'∊nl:⍺.(height width)draw.plot w
-        (⊂'height')∊nl:⍺.height draw.plot w
-        (⊂'width')∊nl:⍺.width draw.plot w
-        draw.plot w
-    }
-    
-    table←{
-        N←{9.1=42 ⎕ATX'⍵'}
-        ⍺←⊢
-        N ⍵:⍺{
-            0=⎕NC'⍺':⊃draw.table/↓⍉↑⍵.⎕VGET-2
-            0∧.=80|⎕DR¨⍺:⍺ draw.table ⍵.⎕VGET ⍺
-            ⍺.title draw.table ⍵.⎕VGET ⍺.field
-        }⍵
-        ⍺ draw.table ⍵       
-    }
+      plot←{
+          N←{9.1=42 ⎕ATX'⍵'}
+          A←{
+              2=≢⍴⍵:⍵
+              ~(N ⍵)∨(1=≡⍵)∧∧/N¨⍵:⍵
+              s←{
+                  t←⍵ ⎕VGET(⊂'type' 'scatter')
+                  (⊂'name')∊⍵.⎕NL-2:t ⍵.(name y x)
+                  t({0::⍵.y ⋄ ⍵.(y x)}⍵)
+              }¨⍵
+              1<≢t←∪⊃¨s:⎕SIGNAL 6 ⋄ t←⊃t ⋄ s←⊃∘⌽¨s
+              ('bar'≡t)∧~0∊80|⎕DR¨s:⎕SIGNAL 11
+              1=≢s:⊃s
+              1=≢x←∪⊃∘⌽¨s:(⊂⍣⍺{⊃⍣(2=≢⍵)⊢¯1↓⍵}¨s),x
+              1=≢y←∪¯2⊃⍤↑¨s:y,(⊂⍣⍺{2=≢⍵:⊃⌽⍵ ⋄ (¯2↓⍵),¯1↑⍵}¨s)
+              s
+          }
+          ⍺←()
+          ~N ⍺:⍺ draw.plot 0 A ⍵
+          w←('stack'≡⍺ ⎕VGET⊂'barmode' 'group')A ⍵ ⋄ nl←⍺.⎕NL-2
+          ∧/'height' 'width'∊nl:⍺.(height width)draw.plot w
+          (⊂'height')∊nl:⍺.height draw.plot w
+          (⊂'width')∊nl:⍺.width draw.plot w
+          draw.plot w
+      }
+
+      table←{
+          N←{9.1=42 ⎕ATX'⍵'}
+          ⍺←⊢
+          N ⍵:⍺{
+              0=⎕NC'⍺':⊃draw.table/↓⍉↑⍵.⎕VGET-2
+              0∧.=80|⎕DR¨⍺:⍺ draw.table ⍵.⎕VGET ⍺
+              w←'progress'∘≡¨⍺.⎕VGET⊂⊂'formatter' ''
+              d←(10⌈≢¨w/⍺.title)(↓draw.hbar)¨@(w⍨)⍵.⎕VGET ⍺.field
+              ⍺.title draw.table d
+          }⍵
+          ⍺ draw.table ⍵
+      }
 
 :EndNamespace

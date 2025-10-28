@@ -1,0 +1,49 @@
+﻿:Namespace Plotly
+
+    ⎕IO←1 ⋄ ⎕ML←1                                 
+ 
+    head←'<script src="https://cdn.plot.ly/plotly-3.1.0.min.js" charset="utf-8"></script>'
+
+    plot←{
+        ⍺←()
+
+        ⍝ non-namespace left argument
+        layout←{
+            1=≢⍵:1(9÷16)×⍵
+            l←() ⋄ l⊣l.(width height)←2↑⍵
+        }⍣(326≢⎕DR ⍺)⊢⍺
+
+        ⍝ non-namespace right argument
+        (,326)≢∪⎕DR¨∊⍵:⊃∇/{
+            ⍺←'group' ⋄ 1=≡⍵:layout(type:'bar' ⋄ y:⍵ ⋄ x:⍳≢⍵)
+            0=80|⎕DR∊⊃⍵:'stack'∇ ¯1(↓,(1↑⍵),↑)¨⊂¨⍣(2=≡1↓⍵)⊢1↓⍵
+            ((1=≡)∨0=80|⎕DR∘∊)⊃⌽⍵:'stack'∇,∘(¯1↑⍵)¨⊂¨⍣(2=≡¯1↓⍵)⊢¯1↓⍵
+            1=≡⊃⍵:∇ 1(↑,(1↑⍵),↓)¨⊂¨⍣(2=≡1↓⍵)⊢1↓⍵
+            n←{
+                n←() ⋄ n.(name y x)←¯3↑(⊂''),⍵
+                0∊80|⎕DR∊n.x:n ⎕NS(type:'bar' ⋄ orientation:'v')
+                0∊80|⎕DR∊n.y:n ⎕NS(type:'bar' ⋄ orientation:'h')
+                n.type←'scatter' ⋄ n
+            }¨⍵
+            1≥+/n.type≡¨⊂'bar':layout n
+            layout.barmode←⍺ ⋄ layout n
+        }⍵
+
+        ⍝ default layout
+        default_layout←(
+            height:320
+            barmode:'group'
+            margin:(t:10 ⋄ b:40 ⋄ l:40 ⋄ r:10)
+        )
+
+        ⍝ json
+        config←'{displaylogo:false, responsive:true}'
+        data layout←⎕JSON¨(⌽,⍵)(⎕NS default_layout,layout)
+
+        ⍝ html
+        get←'document.getElementById(''',(id←'plt-',120⌶4),''')'
+        script←'Plotly.newPlot(',get,', ',data,', ',layout,', ',config,');'
+        '<div id="',id,'"></div><script>',script,'</script>'
+    }
+
+:EndNamespace

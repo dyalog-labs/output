@@ -1,0 +1,29 @@
+﻿:Namespace Tabulator
+
+    ⎕IO←1 ⋄ ⎕ML←1
+
+    head←'<link href="https://unpkg.com/tabulator-tables@6.3.1/dist/css/tabulator.min.css" rel="stylesheet">'
+    head,←'<script type="text/javascript" src="https://unpkg.com/tabulator-tables@6.3.1/dist/js/tabulator.min.js"></script>'
+
+      table←{
+          path←'https://unpkg.com/tabulator-tables@6.3.1/dist/js/tabulator.min'
+          default_config←(layout:'fitColumns')
+          ⍺←{
+              9.1=42 ⎕ATX'⍵':{(field:⍵ ⋄ title:⍵)}¨⍵.⎕NL ¯2
+              2=≢⍴⍵:∇↓⍉⍵
+              {(field:⍕⍵)}¨(⍳≢⍵)-⎕IO
+          }⍵
+          data←{
+              2=≢⍴⍵:↓⍵
+              2≤|≡⍵:↓⍉↑⍵
+              k v←↓⍉↑⍵.⎕VGET ¯2 ⋄ ⊢(⊂⍬)(⎕NS⍤⊣⎕VSET{↓⍉↑k ⍵})¨↓⍉↑v ⍝ namespace of vectors to vector of namespaces (!)
+          }⍵
+          config←⍺{a←⍺
+              0<⎕NC'a.columns':⎕NS default_config ⍺ ⍵
+              ⎕NS default_config(columns:⍺)⍵
+          }(data:data)
+          script←'var table = new Tabulator("#',(id←'tbl-',120⌶4),'", ',(⎕JSON config),');'
+          '<div id="',id,'"></div><script>',script,'</script>'
+      }
+
+:EndNamespace

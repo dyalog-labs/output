@@ -1,0 +1,22 @@
+﻿      {title} Html input;ride;exists;doc;body;head
+          :If 3=≡input
+            head body←⊃input
+            head←'<head><title>',('<' '\&'⎕R'\&lt;' '\&amp;'⊢title),'</title>',head,'</head>'
+            input←'<meta charset="utf-8"><html>',head,'<body oncontextmenu="return false">',body,'</body></html>'
+          :EndIf
+          :If 0=⎕NC'title' ⋄ title←⊃'3500⌶'{⍺⍵}⍨∘∊'<title>(.*)</title>'⎕S'\1'⊢input ⋄ :EndIf
+          input(¯1↓∘∊,¨⍥⊆)←⎕UCS 10 ⍝ join if nested
+          ride←3501⌶⍬ ⋄ exists←{10::0 ⋄ ⎕NEXISTS ⍵}input
+          :If ≢'^\s*(https?://|([-\w]+\.)+\w\w+)'⎕S 3⍠'Mode' 'D'⊢input ⍝ looks like URL
+          :OrIf ride∧exists
+              input←'''' '\"'⎕R'\&apos;' '\&quot;'⊢input
+              input,⍨←'http://'/⍨~exists∨≢'^https?://'⎕S 3⊢input
+              input←'<meta http-equiv="refresh" content="0;url=''',input,'''">'
+          :EndIf
+          ride{
+            title body←⍵ ⋄ RideRender←3500⌶ ⋄ Err←⎕SIGNAL{(⊂('EN'⍺)('Message'⍵))/⍨×≢⍵}
+            ⍺:11 Err'Unable to initialise HTMLRenderer'/⍨¯1=(title RideRender⊢)body
+            '0'∊⎕SE.SALTUtils.getEnvir'ENABLE_CEF':11 Err'HTMLRenderer is disabled (ENABLE_CEF=0)'
+            11::11 Err'Unable to initialise HTMLRenderer'
+            (#.⎕NEW'HTMLRenderer'(⊂'HTML'body)).Wait
+          }&title input

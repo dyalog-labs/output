@@ -27,5 +27,16 @@
         (⊂'width')∊nl:⍺.width draw.plot w
         draw.plot w
     }
+    
+    table←{
+        N←{9.1=42 ⎕ATX'⍵'}
+        ⍺←⊢
+        N ⍵:⍺{
+            0=⎕NC'⍺':⊃draw.table/↓⍉↑⍵.⎕VGET-2
+            0∧.=80|⎕DR¨⍺:⍺ draw.table ⍵.⎕VGET ⍺
+            ⍺.title draw.table ⍵.⎕VGET ⍺.field
+        }⍵
+        ⍺ draw.table ⍵       
+    }
 
 :EndNamespace

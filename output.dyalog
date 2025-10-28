@@ -11,7 +11,7 @@
     hplotly←⎕SE.Output.Plotly.head
     plotly←⎕SE.Output.Plotly.plot
     plottxt←⎕SE.Output.Text.plot
-    tabletxt←⎕SE.Output.Text.draw.table
+    tabletxt←⎕SE.Output.Text.table
     htabulator←⎕Se.Output.Tabulator.head
     tabulator←⎕Se.Output.Tabulator.table
     :EndSection

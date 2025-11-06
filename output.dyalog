@@ -29,7 +29,7 @@
       r.Parse←⊂''
     ∇ 
 
-    ∇ r←{type}Run(cmd input);parms;config;type;expr;parser;raw
+    ∇ r←{type}Run(cmd input);parms;config;expr;parser;raw
       :If 'HtmlR'≡cmd
           raw←'^\s*-r(aw?)?\s+|\s+-r(aw?)?\s*$'
           :If ≢raw ⎕S 3⊢input
@@ -37,10 +37,13 @@
           :EndIf
           html ##.THIS⍎input
       :EndIf
-      parms←(⎕NEW ⎕SE.Parser'-type∊plotly text  -config=').Parse input
+      parms←(⎕NEW ⎕SE.Parser'-t[∊]0 1 -type∊plotly text  -config=').Parse input
       :If parms.config≡0 ⋄ config←⊢ ⋄ :Else ⋄ config←##.THIS⍎parms.config ⋄ :EndIf
-      :If 0=⎕NC'type' ⋄ type←parms.type ⋄ :EndIf
-      expr←'^ +| +$'⎕R''⊢'-\w+=(\w+|(''[^'']*'')+)'⎕R''⊢input
+      :If 0=⎕NC'type'
+          :If 0=80|⎕DR parms.t ⋄ parms.t←⍎parms.t ⋄ :EndIf
+          type←'text'⊣⍣parms.t⊢parms.type
+      :EndIf
+      expr←'^ +| +$'⎕R''⊢'^\s*-t\s+'⎕R''⊢'-\w+=(\w+|(''[^'']*'')+)'⎕R''⊢input
       :Select cmd
       :Case 'Plt'
           :Select type
@@ -68,7 +71,6 @@
           :Case 'tabulator'
             html&HTML expr htabulator(config tabulator ##.THIS⍎expr)
           :EndSelect
-          ⍝r←'command Tbl in construction' ⍝ ENTER COMMAND CODE HERE
       :EndSelect
     ∇ 
 
@@ -87,6 +89,7 @@
           r,←⊂''
           r,←⊂'-type=plotly  plot using plotly and HTMLRenderer or Ride'
           r,←⊂'-type=text    plot using text'
+          r,←⊂'-t            equivalent to -type=text'
           r,←⊂''
           r,←⊂'-config=      configuration parameters'
           r,←⊂''
@@ -110,6 +113,7 @@
           r,←⊂''
           r,←⊂'-type=tabulator  tabulate using tabulator and HTMLRenderer or Ride'
           r,←⊂'-type=text       tabulate using text'
+          r,←⊂'-t               equivalent to -type=text'
           r,←⊂''
           r,←⊂'-config=         configuration for each column'
           r,←⊂''

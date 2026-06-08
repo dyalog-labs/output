@@ -5,23 +5,26 @@
     head←'<link href="https://unpkg.com/tabulator-tables@6.4.0/dist/css/tabulator.min.css" rel="stylesheet">'
     head,←'<script type="text/javascript" src="https://unpkg.com/tabulator-tables@6.4.0/dist/js/tabulator.min.js"></script>'
 
+      flip←{
+          2=≢⍴⍵:↓⍵
+          2≤|≡⍵:↓⍉↑⍵
+          1=≡⍵:().⎕VSET↓⍉↑n(↓⍉↑⍵.⎕VGET⊂n←(⊃⍵).⎕NL ¯2)
+          k v←↓⍉↑⍵.⎕VGET ¯2 ⋄ ⊢(⊂⍬)(⎕NS⍤⊣⎕VSET{↓⍉↑k ⍵})¨↓⍉↑v ⍝ namespace of vectors to vector of namespaces (!)
+      }
+      sort←{⍺←⊃⍵.⎕NL-2 ⋄ flip ⍺ ⍺⍺{⍵[⍺⍺ ⍵.⎕VGET⊂⍺]}flip ⍵}
       table←{
-          path←'https://unpkg.com/tabulator-tables@6.3.1/dist/js/tabulator.min'
+          path←'https://unpkg.com/tabulator-tables@6.4.0/dist/js/tabulator.min'
           default_config←(layout:'fitColumns')
           ⍺←{
               9.1=42 ⎕ATX'⍵':{(field:⍵ ⋄ title:⍵)}¨⍵.⎕NL ¯2
               2=≢⍴⍵:∇↓⍉⍵
               {(field:⍕⍵)}¨(⍳≢⍵)-⎕IO
           }⍵
-          data←{
-              2=≢⍴⍵:↓⍵
-              2≤|≡⍵:↓⍉↑⍵
-              k v←↓⍉↑⍵.⎕VGET ¯2 ⋄ ⊢(⊂⍬)(⎕NS⍤⊣⎕VSET{↓⍉↑k ⍵})¨↓⍉↑v ⍝ namespace of vectors to vector of namespaces (!)
-          }⍵
+          ⊃0∧.=⍺.⎕NC⊂'field':⍵∇⍨⍺⎕NS¨⍨{(field:⍕⍵)}¨(⍳≢⍵)-⎕IO
           config←⍺{a←⍺
               0<⎕NC'a.columns':⎕NS default_config ⍺ ⍵
               ⎕NS default_config(columns:⍺)⍵
-          }(data:data)
+          }(data:flip ⍵)
           script←'var table = new Tabulator("#',(id←'tbl-',120⌶4),'", ',(⎕JSON config),');'
           '<div id="',id,'"></div><script>',script,'</script>'
       }

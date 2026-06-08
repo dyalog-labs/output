@@ -20,30 +20,22 @@
     ∇ r←List
       r←⎕NS¨3⍴⊂⍬
     ⍝ Name, group, short description and parsing rules
-      r.Name←'HtmlR' 'Plt' 'Tbl'
+      r.Name←'Plt' 'Tbl'
       r.Group←⊂'Out'
-      r[1].Desc←'Show HTML'
-      r[2].Desc←'Plot data'
-      r[3].Desc←'Tabulate data'
+      r[1].Desc←'Plot data'
+      r[2].Desc←'Tabulate data'
       ⍝r.Parse←'1L -type∊plotly text  -config= ' '1L -type∊tabulator text  -columns= ' ⍝ ENTER NUMBER OF ARGS AND OPTIONALLY -modifiers HERE (for details, see https://docs.dyalog.com/20.0/User%20Commands%20User%20Guide.pdf#page=18 )
       r.Parse←⊂''
-    ∇ 
+    ∇
 
-    ∇ r←{type}Run(cmd input);parms;config;expr;parser;raw
-      :If 'HtmlR'≡cmd
-          raw←'^\s*-r(aw?)?\s+|\s+-r(aw?)?\s*$'
-          :If ≢raw ⎕S 3⊢input
-              input←'^|''|$'⎕R'&'''⊢raw ⎕R''⊢input
-          :EndIf
-          html ##.THIS⍎input
-      :EndIf
-      parms←(⎕NEW ⎕SE.Parser'-t[∊]0 1 -type∊plotly text  -config=').Parse input
+    ∇ r←{type}Run(cmd input);parms;config;expr;parser
+      parms←(⎕NEW ⎕SE.Parser'-t[∊]0 1 -type∊plotly tabulator text -config=').Parse input
       :If parms.config≡0 ⋄ config←⊢ ⋄ :Else ⋄ config←##.THIS⍎parms.config ⋄ :EndIf
       :If 0=⎕NC'type'
           :If 0=80|⎕DR parms.t ⋄ parms.t←⍎parms.t ⋄ :EndIf
           type←'text'⊣⍣parms.t⊢parms.type
       :EndIf
-      expr←'^ +| +$'⎕R''⊢'^\s*-t\s+'⎕R''⊢'-\w+=(\w+|(''[^'']*'')+)'⎕R''⊢input
+      expr←'^ +| +$'⎕R''⊢'^\s*-t\s+'⎕R''⊢'-\w+=(\S+|(''[^'']*'')+)'⎕R''⊢input
       :Select cmd
       :Case 'Plt'
           :Select type
@@ -57,6 +49,8 @@
             r←config plottxt ##.THIS⍎expr
           :Case 'plotly'
             html&HTML expr hplotly(config plotly ##.THIS⍎expr)
+          :Else
+            ⎕SIGNAL 5
           :EndSelect
       :Case 'Tbl'
           :Select type
@@ -70,16 +64,14 @@
             r←config tabletxt ##.THIS⍎expr
           :Case 'tabulator'
             html&HTML expr htabulator(config tabulator ##.THIS⍎expr)
+          :Else
+            ⎕SIGNAL 5
           :EndSelect
       :EndSelect
     ∇ 
 
     ∇ r←level Help cmd
       :Select cmd
-      :Case 'HtmlR'
-          r←⊂List[1].Desc
-          r,←⊂''
-          r,←⊂']HtmlR [-raw] <data>'
       :Case 'Plt'
           r←⊂List[2].Desc
           r,←⊂''
@@ -104,6 +96,14 @@
           r,←⊂'    ]Plt labels(x2 x1)     ⍝ stacked horizontal bars'
           r,←⊂'    ]Plt y2 y1 labels      ⍝ grouped vertical bars'
           r,←⊂'    ]Plt (y2 y1)labels     ⍝ stacked vertical bars'
+          r,←⊂''
+          r,←⊂'    ]Plt -t y x            ⍝ data series as text'
+          r,←⊂'    ]Plt -t y labels       ⍝ vertical bars as text'
+          r,←⊂''
+          r,←⊂'    c←(xaxis:(title:''X''))  ⍝ config namespace'
+          r,←⊂'    ]Plt -config=c y x     ⍝ data series with config'
+          r,←⊂''
+          r,←⊂'    See https://plotly.com/javascript/reference/ for more options'
       :Case 'Tbl'
           r←⊂List[3].Desc
           r,←⊂''
@@ -119,9 +119,22 @@
           r,←⊂''
           r,←⊂'Examples:'
           r,←⊂'    ]Tbl y1 y2 y3               ⍝ table with 3 columns'
-          r,←⊂'    ]Tbl n←(one:y1 ⋄ other:y2)  ⍝ 2 columns with titles'
+          r,←⊂'    ]Tbl (one:y1 ⋄ other:y2)    ⍝ 2 columns with titles'
+          :If 1=level ⋄ r,←⊂']Plt -???  ⍝ for more examples' ⋄ →0 ⋄ :EndIf
+          r,←⊂''
+          r,←⊂'    td←()'
+          r,←⊂'    td.name←''Alice'' ''Bob'' ''Jonh'' ''Sarah'''
+          r,←⊂'    td.age←24 32 10 29'
+          r,←⊂'    td.dob←''14/05/1982'' ''22/05/1982'' ''01/08/1980'' ''31/01/1999'''
+          r,←⊂'    columns←(title:''Name'' ⋄ field:''name'')'
+          r,←⊂'    columns,←(title:''Age'' ⋄ field:''age'' ⋄ hozAlign:''left'' ⋄ formatter:''progress'')'
+          r,←⊂'    columns,←(title:''Date of Birth'' ⋄ field:''dob'' ⋄ sorter:''date'' ⋄ hozAlign:''center'')'
+          r,←⊂'    ]tbl -c=columns td     ⍝ tabulator table'
+          r,←⊂'    ]tbl -t -c=columns td  ⍝ text table'
+          r,←⊂''
+          r,←⊂'    See https://tabulator.info/docs/6.4/columns for more options'
       :EndSelect
-    ∇ 
+    ∇
     :EndSection
 
     :Section UTILS

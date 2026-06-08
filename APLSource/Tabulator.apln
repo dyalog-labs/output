@@ -2,8 +2,8 @@
 
     ⎕IO←1 ⋄ ⎕ML←1
 
-    head←'<link href="https://unpkg.com/tabulator-tables@6.3.1/dist/css/tabulator.min.css" rel="stylesheet">'
-    head,←'<script type="text/javascript" src="https://unpkg.com/tabulator-tables@6.3.1/dist/js/tabulator.min.js"></script>'
+    head←'<link href="https://unpkg.com/tabulator-tables@6.4.0/dist/css/tabulator.min.css" rel="stylesheet">'
+    head,←'<script type="text/javascript" src="https://unpkg.com/tabulator-tables@6.4.0/dist/js/tabulator.min.js"></script>'
 
       table←{
           path←'https://unpkg.com/tabulator-tables@6.3.1/dist/js/tabulator.min'

@@ -1,11 +1,12 @@
 {
   api: "",
   assets: "",
+  checkLICENSEfile: 1,
   description: "Display output: HTML, plots, tables",
   documentation: "",
   exclude: "",
   files: "",
-  group: "yiyus",
+  group: "dyalog_labs",
   io: 1,
   license: "MIT",
   lx: "",
@@ -21,5 +22,5 @@
   tags: "text,html,output",
   tatin_version: "0.103.0",
   userCommandScript: "./output.dyalog",
-  version: "0.0.4",
+  version: "0.0.5",
 }

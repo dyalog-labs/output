@@ -17,7 +17,7 @@
   os_lin: 1,
   os_mac: 1,
   os_win: 1,
-  project_url: "https://github.com/yiyus/output",
+  project_url: "https://github.com/dyalog-labs/output",
   source: "APLSource",
   tags: "text,html,output",
   tatin_version: "0.103.0",

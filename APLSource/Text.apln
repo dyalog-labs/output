@@ -29,15 +29,20 @@
       }
 
       table←{
-          N←{9.1=42 ⎕ATX'⍵'}
           ⍺←⊢
+          N←{9.1=42 ⎕ATX'⍵'}
+          NT←{
+              w←'progress'∘≡¨⍺.⎕VGET⊂⊂'formatter' ''
+              d←(10⌈≢¨w/⍺.title)(↓draw.hbar)¨@(w⍨)⍵
+              ⍺.title draw.table d
+          }
           N ⍵:⍺{
               0=⎕NC'⍺':⊃draw.table/↓⍉↑⍵.⎕VGET-2
               0∧.=80|⎕DR¨⍺:⍺ draw.table ⍵.⎕VGET ⍺
-              w←'progress'∘≡¨⍺.⎕VGET⊂⊂'formatter' ''
-              d←(10⌈≢¨w/⍺.title)(↓draw.hbar)¨@(w⍨)⍵.⎕VGET ⍺.field
-              ⍺.title draw.table d
+              ⍺ NT ⍵.⎕VGET ⍺.field
           }⍵
+          3=⎕NC'⍺':draw.table ⍵
+          ∧/N¨⍺:⍺ NT ⍵
           ⍺ draw.table ⍵
       }
 

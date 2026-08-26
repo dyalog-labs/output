@@ -115,7 +115,7 @@
           r,←⊂'-type=text       tabulate using text'
           r,←⊂'-t               equivalent to -type=text'
           r,←⊂''
-          r,←⊂'-config=         configuration for each column'
+          r,←⊂'-config=         configuration (or title) for each column'
           r,←⊂''
           r,←⊂'Examples:'
           r,←⊂'    ]Tbl y1 y2 y3               ⍝ table with 3 columns'
@@ -131,6 +131,7 @@
           r,←⊂'    columns,←(title:''Date of Birth'' ⋄ field:''dob'' ⋄ sorter:''date'' ⋄ hozAlign:''center'')'
           r,←⊂'    ]tbl -c=columns td     ⍝ tabulator table'
           r,←⊂'    ]tbl -t -c=columns td  ⍝ text table'
+          r,←⊂'    ]tbl -t -c=columns.title td.(name age dob)  ⍝ use column titles as config'
           r,←⊂''
           r,←⊂'    See https://tabulator.info/docs/6.4/columns for more options'
       :EndSelect

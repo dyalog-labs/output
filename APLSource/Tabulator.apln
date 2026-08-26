@@ -20,6 +20,7 @@
               2=≢⍴⍵:∇↓⍉⍵
               {(field:⍕⍵)}¨(⍳≢⍵)-⎕IO
           }⍵
+          0∧.=80|⎕DR¨⍺:⍵∇⍨⍺{(field:⍕⍵ ⋄ title:⍺)}¨(⍳≢⍵)-⎕IO
           ⊃0∧.=⍺.⎕NC⊂'field':⍵∇⍨⍺⎕NS¨⍨{(field:⍕⍵)}¨(⍳≢⍵)-⎕IO
           config←⍺{a←⍺
               0<⎕NC'a.columns':⎕NS default_config ⍺ ⍵

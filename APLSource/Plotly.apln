@@ -31,7 +31,6 @@
 
         ⍝ default layout
         default_layout←(
-            height:320
             barmode:'group'
             margin:(t:10 ⋄ b:40 ⋄ l:40 ⋄ r:10)
         )
@@ -43,7 +42,7 @@
         ⍝ html
         get←'document.getElementById(''',(id←'plt-',120⌶4),''')'
         script←'Plotly.newPlot(',get,', ',data,', ',layout,', ',config,');'
-        '<div id="',id,'"></div><script>',script,'</script>'
+        '<div id="',id,'" style="widht:95vw;height:95vh;"></div><script>',script,'</script>'
     }
 
 :EndNamespace

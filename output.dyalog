@@ -12,8 +12,8 @@
     plotly←⎕SE.Output.Plotly.plot
     plottxt←⎕SE.Output.Text.plot
     tabletxt←⎕SE.Output.Text.table
-    htabulator←⎕Se.Output.Tabulator.head
-    tabulator←⎕Se.Output.Tabulator.table
+    htabulator←⎕SE.Output.Tabulator.head
+    tabulator←⎕SE.Output.Tabulator.table
     :EndSection
 
     :Section UCMD
@@ -131,7 +131,7 @@
           r,←⊂'    columns,←(title:''Date of Birth'' ⋄ field:''dob'' ⋄ sorter:''date'' ⋄ hozAlign:''center'')'
           r,←⊂'    ]tbl -c=columns td     ⍝ tabulator table'
           r,←⊂'    ]tbl -t -c=columns td  ⍝ text table'
-          r,←⊂'    ]tbl -t -c=columns.title td.(name age dob)  ⍝ use column titles as config'
+          r,←⊂'    ]tbl -t -c=columns.title td.(name age dob)  ⍝ column titles as config'
           r,←⊂''
           r,←⊂'    See https://tabulator.info/docs/6.4/columns for more options'
       :EndSelect

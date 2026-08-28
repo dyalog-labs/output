@@ -10,6 +10,7 @@
     html←⎕SE.Output.Html
     hplotly←⎕SE.Output.Plotly.head
     plotly←⎕SE.Output.Plotly.plot
+    plotlym←⎕SE.Output.Plotly.multi
     plottxt←⎕SE.Output.Text.plot
     tabletxt←⎕SE.Output.Text.table
     htabulator←⎕SE.Output.Tabulator.head
@@ -18,24 +19,23 @@
 
     :Section UCMD
     ∇ r←List
-      r←⎕NS¨3⍴⊂⍬
+      r←⎕NS¨2⍴⊂⍬
     ⍝ Name, group, short description and parsing rules
       r.Name←'Plt' 'Tbl'
       r.Group←⊂'Out'
       r[1].Desc←'Plot data'
       r[2].Desc←'Tabulate data'
-      ⍝r.Parse←'1L -type∊plotly text  -config= ' '1L -type∊tabulator text  -columns= ' ⍝ ENTER NUMBER OF ARGS AND OPTIONALLY -modifiers HERE (for details, see https://docs.dyalog.com/20.0/User%20Commands%20User%20Guide.pdf#page=18 )
       r.Parse←⊂''
     ∇
 
-    ∇ r←{type}Run(cmd input);parms;config;expr;parser
-      parms←(⎕NEW ⎕SE.Parser'-t[∊]0 1 -type∊plotly tabulator text -config=').Parse input
+    ∇ r←{type}Run(cmd input);parms;config;expr;parser;plt
+      parms←(⎕NEW ⎕SE.Parser'-t[∊]0 1 -m[∊]0 1 -type∊plotly tabulator text -config=').Parse input
       :If parms.config≡0 ⋄ config←⊢ ⋄ :Else ⋄ config←##.THIS⍎parms.config ⋄ :EndIf
       :If 0=⎕NC'type'
           :If 0=80|⎕DR parms.t ⋄ parms.t←⍎parms.t ⋄ :EndIf
           type←'text'⊣⍣parms.t⊢parms.type
       :EndIf
-      expr←'^ +| +$'⎕R''⊢'^\s*-t\s+'⎕R''⊢'-\w+=(\S+|(''[^'']*'')+)'⎕R''⊢input
+      expr←'^ +| +$'⎕R''⊢'^\s*-t\s+'⎕R''⊢'^\s*-m\s+'⎕R''⊢'-\w+=(\S+|(''[^'']*'')+)'⎕R''⊢input
       :Select cmd
       :Case 'Plt'
           :Select type
@@ -48,7 +48,8 @@
           :Case 'text'
             r←config plottxt ##.THIS⍎expr
           :Case 'plotly'
-            html&HTML expr hplotly(config plotly ##.THIS⍎expr)
+            plt←config{⍺←⊢ ⋄ parms.m:⍺ plotlym ⍵ ⋄ ⍺ plotly ⍵}##.THIS⍎expr
+            html&HTML expr hplotly plt
           :Else
             ⎕SIGNAL 5
           :EndSelect
@@ -73,15 +74,17 @@
     ∇ r←level Help cmd
       :Select cmd
       :Case 'Plt'
-          r←⊂List[2].Desc
+          r←⊂List[1].Desc
           r,←⊂''
-          r,←⊂']Plt <data> [-type={plotly|text}] [-config=<configuration>]'
+          r,←⊂']Plt <data> [-type={plotly|text}] [-m] [-config=<configuration>]'
           :If 0=level ⋄ r,←⊂']Plt -??  ⍝ for details and examples' ⋄ →0 ⋄ :EndIf
           r,←⊂'<data>        data to plot'
           r,←⊂''
           r,←⊂'-type=plotly  plot using plotly and HTMLRenderer or Ride'
           r,←⊂'-type=text    plot using text'
           r,←⊂'-t            equivalent to -type=text'
+          r,←⊂''
+          r,←⊂'-m            multiplot from <data> array'
           r,←⊂''
           r,←⊂'-config=      configuration parameters'
           r,←⊂''
@@ -105,7 +108,7 @@
           r,←⊂''
           r,←⊂'    See https://plotly.com/javascript/reference/ for more options'
       :Case 'Tbl'
-          r←⊂List[3].Desc
+          r←⊂List[2].Desc
           r,←⊂''
           r,←⊂']Tbl <data> [-type={tabulator|text}] [-config=<configuration>]'
           :If 0=level ⋄ r,←⊂']Tbl -??  ⍝ for details and examples' ⋄ →0 ⋄ :EndIf

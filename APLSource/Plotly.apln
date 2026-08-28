@@ -42,7 +42,15 @@
         ⍝ html
         get←'document.getElementById(''',(id←'plt-',120⌶4),''')'
         script←'Plotly.newPlot(',get,', ',data,', ',layout,', ',config,');'
-        '<div id="',id,'" style="widht:95vw;height:95vh;"></div><script>',script,'</script>'
+        '<div id="',id,'" style="width:92vw;height:92vh"></div><script>',script,'</script>'
+    }
+
+    multi←{
+        ⍺←()
+        r←¯2↑1,⍴⍵
+        c←(grid:(rows:⊃r ⋄ columns:⊃⌽r ⋄ pattern:'independent'))
+        d←{(xaxis:'x',⍕⍵ ⋄ yaxis:'y',⍕⍵)(⎕NS,)⍨¨⍵⊃d}¨⍳≢d←,r⍴⍵
+        (⍺ ⎕NS c)plot∊d
     }
 
 :EndNamespace

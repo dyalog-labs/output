@@ -1,5 +1,8 @@
-﻿      {title} Html input;ride;exists;doc;body;head
+﻿      {title} Html input;ride;exists;doc;body;head;size;coord
           :If 0=⎕NC'title' ⋄ title←⊃'3500⌶'{⍺⍵}⍨∘∊'<title>(.*)</title>'⎕S'\1'⊢input ⋄ :EndIf
+          size←⊂'Size'(45 50)
+          :If 1<|≡title ⋄ size←('Coord' 'Pixel')('Size'(⊃⌽title)) ⋄ title←⊃title ⋄ :EndIf
+          :If 2|⎕DR title ⋄ size←('Coord' 'Pixel')('Size' title) ⋄ :EndIf
           :If 3=≡input
             head body←⊃input
             head←'<head><title>',('<' '\&'⎕R'\&lt;' '\&amp;'⊢title),'</title>',head,'</head>'
@@ -14,9 +17,9 @@
               input←'<meta http-equiv="refresh" content="0;url=''',input,'''">'
           :EndIf
           ride{
-            title body←⍵ ⋄ RideRender←3500⌶ ⋄ Err←⎕SIGNAL{(⊂('EN'⍺)('Message'⍵))/⍨×≢⍵}
+            size title body←⍵ ⋄ RideRender←3500⌶ ⋄ Err←⎕SIGNAL{(⊂('EN'⍺)('Message'⍵))/⍨×≢⍵}
             ⍺:11 Err'Unable to initialise HTMLRenderer'/⍨¯1=(title RideRender⊢)body
             '0'∊⎕SE.SALTUtils.getEnvir'ENABLE_CEF':11 Err'HTMLRenderer is disabled (ENABLE_CEF=0)'
             11::11 Err'Unable to initialise HTMLRenderer'
-            (#.⎕NEW'HTMLRenderer'(⊂'HTML'body)).Wait
-          }&title input
+            (#.⎕NEW'HTMLRenderer'((⊂'HTML'body),size)).Wait
+          }&size title input

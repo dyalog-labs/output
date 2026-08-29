@@ -9,7 +9,7 @@
 
         ⍝ non-namespace left argument
         layout←{
-            1=≢⍵:1(9÷16)×⍵
+            1=≢⍵:∇1(9÷16)×⊃⍵
             l←() ⋄ l⊣l.(width height)←2↑⍵
         }⍣(326≢⎕DR ⍺)⊢⍺
 
@@ -35,6 +35,10 @@
             margin:(t:10 ⋄ b:40 ⋄ l:40 ⋄ r:10)
         )
 
+        ⍝ style depending on fixed size or not
+        style←'width:fit-content;margin:0 auto;overflow:auto'
+        style←'width:92vw;height:92vh'⊣⍣(⊃0=layout.⎕NC'width')⊢style
+
         ⍝ json
         config←'{displaylogo:false, responsive:true}'
         data layout←⎕JSON¨(⌽,⍵)(⎕NS default_layout,layout)
@@ -42,7 +46,7 @@
         ⍝ html
         get←'document.getElementById(''',(id←'plt-',120⌶4),''')'
         script←'Plotly.newPlot(',get,', ',data,', ',layout,', ',config,');'
-        '<div id="',id,'" style="width:92vw;height:92vh"></div><script>',script,'</script>'
+        '<div id="',id,'" style="',style,'"></div><script>',script,'</script>'
     }
 
     multi←{

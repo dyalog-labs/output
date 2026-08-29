@@ -29,13 +29,15 @@
     ∇
 
     ∇ r←{type}Run(cmd input);parms;config;expr;parser;plt
-      parms←(⎕NEW ⎕SE.Parser'-t[∊]0 1 -m[∊]0 1 -type∊plotly tabulator text -config=').Parse input
+      parms←(⎕NEW ⎕SE.Parser'-t[∊]0 1 -m[∊]0 1 -type∊plotly tabulator text -config= -window=').Parse input
       :If parms.config≡0 ⋄ config←⊢ ⋄ :Else ⋄ config←##.THIS⍎parms.config ⋄ :EndIf
+      :If parms.window≡0 ⋄ window←⊢ ⋄ :Else ⋄ window←##.THIS⍎parms.window ⋄ :EndIf
+      :If 3≠⎕NC'window' ⋄ :AndIf 1=≢window ⋄ window,←⌊0.5+window×16÷9 ⋄ :EndIf
       :If 0=⎕NC'type'
           :If 0=80|⎕DR parms.t ⋄ parms.t←⍎parms.t ⋄ :EndIf
           type←'text'⊣⍣parms.t⊢parms.type
       :EndIf
-      expr←'^ +| +$'⎕R''⊢'^\s*-t\s+'⎕R''⊢'^\s*-m\s+'⎕R''⊢'-\w+=(\S+|(''[^'']*'')+)'⎕R''⊢input
+      expr←'^ +| +$'⎕R''⊢'^\s*-t\s+'⎕R''⊢'^\s*-m\s+'⎕R''⊢'-\w+=(\S+|(''[^'']*?'')+)'⎕R''⊢input
       :Select cmd
       :Case 'Plt'
           :Select type
@@ -49,7 +51,7 @@
             r←config plottxt ##.THIS⍎expr
           :Case 'plotly'
             plt←config{⍺←⊢ ⋄ parms.m:⍺ plotlym ⍵ ⋄ ⍺ plotly ⍵}##.THIS⍎expr
-            html&HTML expr hplotly plt
+            window html&HTML expr hplotly plt
           :Else
             ⎕SIGNAL 5
           :EndSelect
@@ -64,7 +66,7 @@
           :Case 'text'
             r←config tabletxt ##.THIS⍎expr
           :Case 'tabulator'
-            html&HTML expr htabulator(config tabulator ##.THIS⍎expr)
+            window html&HTML expr htabulator(config tabulator ##.THIS⍎expr)
           :Else
             ⎕SIGNAL 5
           :EndSelect
@@ -87,6 +89,7 @@
           r,←⊂'-m            multiplot from <data> array'
           r,←⊂''
           r,←⊂'-config=      configuration parameters'
+          r,←⊂'-window=      window size'
           r,←⊂''
           r,←⊂'Examples:'
           r,←⊂'    ]Plt y                 ⍝ values as vertical bars'
@@ -105,6 +108,7 @@
           r,←⊂''
           r,←⊂'    c←(xaxis:(title:''X''))  ⍝ config namespace'
           r,←⊂'    ]Plt -config=c y x     ⍝ data series with config'
+          r,←⊂'    ]Plt -win=1024 y x     ⍝ with window size'
           r,←⊂''
           r,←⊂'    See https://plotly.com/javascript/reference/ for more options'
       :Case 'Tbl'
@@ -146,7 +150,9 @@
           title head body←⍵
           title←'<title>',('<' '\&'⎕R'\&lt;' '\&amp;'⊢title),'</title>'
           head←'<head><meta charset="utf-8">',title,head,'</head>'
-          '<!DOCTYPE html><html>',head,'<body oncontextmenu="return false">',body,'</body></html>'
+          style←'width:100vw;height:100vh;display:flex;align-items:center;margin:0'
+          body←'<body style="',style,'" oncontextmenu="return false">',body,'</body>'
+          '<!DOCTYPE html><html>',head,body,'</html>'
       }
     :EndSection
 

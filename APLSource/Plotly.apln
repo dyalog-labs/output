@@ -4,14 +4,13 @@
  
     head←'<script src="https://cdn.plot.ly/plotly-3.6.0.min.js" charset="utf-8"></script>'
 
+    configure←{{1=≢⍵:∇1(9÷16)×⊃⍵ ⋄ l←() ⋄ l⊣l.(width height)←2↑⍵}⍣(326≢⎕DR ⍵)⊢⍵}
+
     plot←{
         ⍺←()
 
         ⍝ non-namespace left argument
-        layout←{
-            1=≢⍵:∇1(9÷16)×⊃⍵
-            l←() ⋄ l⊣l.(width height)←2↑⍵
-        }⍣(326≢⎕DR ⍺)⊢⍺
+        layout←configure ⍺
 
         ⍝ non-namespace right argument
         (,326)≢∪⎕DR¨∊⍵:⊃∇/{
@@ -51,10 +50,11 @@
 
     multi←{
         ⍺←()
+        config←configure ⍺
         r←¯2↑1,⍴⍵
         c←(grid:(rows:⊃r ⋄ columns:⊃⌽r ⋄ pattern:'independent'))
         d←{(xaxis:'x',⍕⍵ ⋄ yaxis:'y',⍕⍵)(⎕NS,)⍨¨⍵⊃d}¨⍳≢d←,r⍴⍵
-        (⍺ ⎕NS c)plot∊d
+        (config ⎕NS c)plot∊d
     }
 
 :EndNamespace

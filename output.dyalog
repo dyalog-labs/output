@@ -28,7 +28,7 @@
       r.Parse←⊂''
     ∇
 
-    ∇ r←{type}Run(cmd input);parms;config;expr;parser;plt
+    ∇ r←{type}Run(cmd input);parms;config;expr;parser;plt;_
       parms←(⎕NEW ⎕SE.Parser'-t[∊]0 1 -m[∊]0 1 -type∊plotly tabulator text -config= -window=').Parse input
       :If parms.config≡0 ⋄ config←⊢ ⋄ :Else ⋄ config←##.THIS⍎parms.config ⋄ :EndIf
       :If parms.window≡0 ⋄ window←⊢ ⋄ :Else ⋄ window←##.THIS⍎parms.window ⋄ :EndIf
@@ -51,7 +51,7 @@
             r←config plottxt ##.THIS⍎expr
           :Case 'plotly'
             plt←config{⍺←⊢ ⋄ parms.m:⍺ plotlym ⍵ ⋄ ⍺ plotly ⍵}##.THIS⍎expr
-            window html&HTML expr hplotly plt
+            _←window html&HTML expr hplotly plt
           :Else
             ⎕SIGNAL 5
           :EndSelect
@@ -66,7 +66,7 @@
           :Case 'text'
             r←config tabletxt ##.THIS⍎expr
           :Case 'tabulator'
-            window html&HTML expr htabulator(config tabulator ##.THIS⍎expr)
+            _←window html&HTML expr htabulator(config tabulator ##.THIS⍎expr)
           :Else
             ⎕SIGNAL 5
           :EndSelect

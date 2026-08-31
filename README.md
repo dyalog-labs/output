@@ -20,14 +20,17 @@ A number of plot types can be directly generated from arrays. Further control is
 
     Plot data
 
-    ]Plt <data> [-type={plotly|text}] [-config=<configuration>]
+    ]Plt <data> [-type={plotly|text}] [-m] [-config=<configuration>]
     <data>        data to plot
 
     -type=plotly  plot using plotly and HTMLRenderer or Ride
     -type=text    plot using text
     -t            equivalent to -type=text
 
+    -m            multiplot from <data> array
+
     -config=      configuration parameters
+    -window=      window size
 
     Examples:
         ]Plt y                 ⍝ values as vertical bars
@@ -45,6 +48,7 @@ A number of plot types can be directly generated from arrays. Further control is
 
         c←(xaxis:(title:'X'))  ⍝ config namespace
         ]Plt -config=c y x     ⍝ data series with config
+        ]Plt -win=1024 y x     ⍝ with window size
 
     See https://plotly.com/javascript/reference/ for more options
 
@@ -95,9 +99,13 @@ This function is similar to the `]HTML` command. It will display the given HTML 
 
 Plotly interface namespace.
 
-- `plot` returns a `<div>` element with a plot of the given data, following the same conventions of the `]Plt` command. The optional left argument specifies size (either widht or height and width) or a config namespace with additional options
+- `plot` returns a `<div>` element with a plot of the given data, following the same conventions of the `]Plt` command. The optional left argument specifies size or a config namespace with additional options
+
+- `multi` similar to `plot` but each element of its right argument is interpreted as a different subplot
 
 - `head` HTML header to download plotly script from CDN
+
+- `configure` configuration namespace from either width or height and width
 
 #### `⎕SE.Output.Tabulator`
 

@@ -111,7 +111,7 @@
           r,←⊂'    ]Plt -config=c y x     ⍝ data series with config'
           r,←⊂'    ]Plt -win=1024 y x     ⍝ with window size'
           r,←⊂''
-          r,←⊂'    See https://plotly.com/javascript/reference/ for more options'
+          r,←⊂'See https://plotly.com/javascript/reference/ for more options'
       :Case 'Tbl'
           r←⊂List[2].Desc
           r,←⊂''
@@ -141,7 +141,7 @@
           r,←⊂'    ]tbl -t -c=columns td  ⍝ text table'
           r,←⊂'    ]tbl -t -c=columns.title td.(name age dob)  ⍝ column titles as config'
           r,←⊂''
-          r,←⊂'    See https://tabulator.info/docs/6.4/columns for more options'
+          r,←⊂'See https://tabulator.info/docs/6.4/columns for more options'
       :EndSelect
     ∇
     :EndSection

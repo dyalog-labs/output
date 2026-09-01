@@ -37,7 +37,7 @@
           :If 0=80|⎕DR parms.t ⋄ parms.t←⍎parms.t ⋄ :EndIf
           type←'text'⊣⍣parms.t⊢parms.type
       :EndIf
-      center←window∘{(-⍺)↑(⌈0.5×⍺+⍴⍵)↑⍵}⍣(⊃3≠⎕NC'window')
+      center←window∘⎕SE.Output.Text.draw.center⍣(⊃3≠⎕NC'window')
       expr←'^ +| +$'⎕R''⊢'^\s*-t\s+'⎕R''⊢'^\s*-m\s+'⎕R''⊢'-\w+=(\S+|(''[^'']*?'')+)'⎕R''⊢input
       :Select cmd
       :Case 'Plt'

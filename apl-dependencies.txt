@@ -1,1 +1,1 @@
-dyalog_labs-textdraw-0.0.2
+dyalog_labs-textdraw-0.0.3

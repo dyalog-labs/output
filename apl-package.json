@@ -22,5 +22,5 @@
   tags: "text,html,output",
   tatin_version: "0.103.0",
   userCommandScript: "./output.dyalog",
-  version: "0.0.6",
+  version: "0.0.7",
 }

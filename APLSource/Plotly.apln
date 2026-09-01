@@ -13,8 +13,12 @@
         layout←configure ⍺
 
         ⍝ non-namespace right argument
+        pts←{(2=≡⍵)∧(1∧.=≡¨⍵)∧(2∧.=≢¨⍵)∨(0=80|⎕DR⊃⍵)∧2∧.=≢¨1↓⍵}
+        inv←{0=80|⎕DR⊃⍵:(1↑⍵),∇1↓⍵ ⋄ ↓⍉↑⍵}
         (,326)≢∪⎕DR¨∊⍵:⊃∇/{
             ⍺←'group' ⋄ 1=≡⍵:layout(type:'bar' ⋄ y:⍵ ⋄ x:⍳≢⍵)
+            (3=≡⍵)∧1∧.=pts¨⍵:∇ inv¨⍵⊣layout ⎕NS←(mode:'markers')
+            pts ⍵:∇ inv ⍵⊣layout ⎕NS←(mode:'markers')
             0=80|⎕DR∊⊃⍵:'stack'∇ ¯1(↓,(1↑⍵),↑)¨⊂¨⍣(2=≡1↓⍵)⊢1↓⍵
             ((1=≡)∨0=80|⎕DR∘∊)⊃⌽⍵:'stack'∇,∘(¯1↑⍵)¨⊂¨⍣(2=≡¯1↓⍵)⊢¯1↓⍵
             1=≡⊃⍵:∇ 1(↑,(1↑⍵),↓)¨⊂¨⍣(2=≡1↓⍵)⊢1↓⍵
@@ -22,17 +26,22 @@
                 n←() ⋄ n.(name y x)←¯3↑(⊂''),⍵
                 0∊80|⎕DR∊n.x:n ⎕NS(type:'bar' ⋄ orientation:'v')
                 0∊80|⎕DR∊n.y:n ⎕NS(type:'bar' ⋄ orientation:'h')
-                n.type←'scatter' ⋄ n
+                n.type←{~⍵:'scatter' ⋄ layout.type}0≠layout.⎕NC'type'
+                n←{~⍵:n ⋄ n.mode←layout.mode ⋄ n}0≠layout.⎕NC'mode'
+                n
             }¨⍵
             1≥+/n.type≡¨⊂'bar':layout n
             layout.barmode←⍺ ⋄ layout n
         }⍵
+        _←layout.⎕EX'type' 'mode'      
 
         ⍝ default layout
         default_layout←(
             barmode:'group'
             margin:(t:10 ⋄ b:40 ⋄ l:40 ⋄ r:10)
-        )
+        )    
+        sl←⊂'false'⊣⍣(0∧.=≢¨⍵.name)⊢'true'
+        default_layout ⎕VSET←⊂'showlegend' sl
 
         ⍝ style depending on fixed size or not
         style←'width:fit-content;margin:0 auto;overflow:auto'

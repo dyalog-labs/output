@@ -12,6 +12,7 @@
     plotly←⎕SE.Output.Plotly.plot
     plotlym←⎕SE.Output.Plotly.multi
     plottxt←⎕SE.Output.Text.plot
+    plottxtm←⎕SE.Output.Text.multi
     tabletxt←⎕SE.Output.Text.table
     htabulator←⎕SE.Output.Tabulator.head
     tabulator←⎕SE.Output.Tabulator.table
@@ -49,7 +50,8 @@
                 'text'Run'Plt'input
             :EndTrap
           :Case 'text'
-            r←center config plottxt ##.THIS⍎expr
+            plt←config{⍺←⊢ ⋄ parms.m:⍺ plottxtm ⍵ ⋄ ⍺ plottxt ⍵}##.THIS⍎expr
+            r←center plt
           :Case 'plotly'
             plt←config{⍺←⊢ ⋄ parms.m:⍺ plotlym ⍵ ⋄ ⍺ plotly ⍵}##.THIS⍎expr
             _←window html&HTML expr hplotly plt

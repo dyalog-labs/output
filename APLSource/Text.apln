@@ -28,6 +28,8 @@
           draw.plot w
       }
 
+      multi←{⍺←⊢ ⋄ ⍺ plot¨⍵}
+
       table←{
           ⍺←⊢
           N←{9.1=42 ⎕ATX'⍵'}

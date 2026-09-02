@@ -4,19 +4,14 @@
  
     head←'<script src="https://cdn.plot.ly/plotly-3.6.0.min.js" charset="utf-8"></script>'
 
-    configure←{{1=≢⍵:∇1(9÷16)×⊃⍵ ⋄ l←() ⋄ l⊣l.(width height)←2↑⍵}⍣(326≢⎕DR ⍵)⊢⍵}
+    config←{{1=≢⍵:∇1(9÷16)×⊃⍵ ⋄ l←() ⋄ l⊣l.(width height)←2↑⍵}⍣(326≢⎕DR ⍵)⊢⍵}
 
-    plot←{
-        ⍺←()
-
-        ⍝ non-namespace left argument
-        layout←configure ⍺
-
-        ⍝ non-namespace right argument
+    data←{
+        ⍺←() ⋄ (,326)≡∪⎕DR¨∊⍵:⍺ ⍵ ⋄ layout←⍺
         pts←{(2=≡⍵)∧(1∧.=≡¨⍵)∧(2∧.=≢¨⍵)∨(0=80|⎕DR⊃⍵)∧2∧.=≢¨1↓⍵}
         inv←{0=80|⎕DR⊃⍵:(1↑⍵),∇1↓⍵ ⋄ ↓⍉↑⍵}
-        (,326)≢∪⎕DR¨∊⍵:⊃∇/{
-            ⍺←'group' ⋄ 1=≡⍵:layout(type:'bar' ⋄ y:⍵ ⋄ x:⍳≢⍵)
+        (⍺ ⎕VGET⊂'barmode' 'group'){
+            1=≡⍵:layout(type:'bar' ⋄ y:⍵ ⋄ x:⍳≢⍵)
             (3=≡⍵)∧∧/pts¨⍵:∇ inv¨⍵⊣layout ⎕NS←(mode:'markers')
             pts ⍵:∇ inv ⍵⊣layout ⎕NS←(mode:'markers')
             0=80|⎕DR∊⊃⍵:'stack'∇ ¯1(↓,(1↑⍵),↑)¨⊂¨⍣(2=≡1↓⍵)⊢1↓⍵
@@ -33,6 +28,13 @@
             1≥+/n.type≡¨⊂'bar':layout n
             layout.barmode←⍺ ⋄ layout n
         }⍵
+    }
+
+    plot←{
+        ⍺←()
+
+        ⍝ non-namespace left argument
+        layout ns←(config ⍺)data ⍵
         _←layout.⎕EX'type' 'mode'      
 
         ⍝ default layout
@@ -40,7 +42,7 @@
             barmode:'group'
             margin:(t:10 ⋄ b:40 ⋄ l:40 ⋄ r:10)
         )    
-        sl←⊂'false'⊣⍣(0∧.=≢¨⍵.name)⊢'true'
+        sl←⊂'false'⊣⍣(0∧.=≢¨ns ⎕VGET(⊂'name' ''))⊢'true'
         default_layout ⎕VSET←⊂'showlegend' sl
 
         ⍝ style depending on fixed size or not
@@ -48,22 +50,25 @@
         style←'width:92vw;height:92vh'⊣⍣(⊃0=layout.⎕NC'width')⊢style
 
         ⍝ json
-        config←'{displaylogo:false, responsive:true}'
-        data layout←⎕JSON¨(⌽,⍵)(⎕NS default_layout,layout)
+        cfg←'{displaylogo:false, responsive:true}'
+        data layout←⎕JSON¨(⌽,ns)(⎕NS default_layout,layout)
 
         ⍝ html
         get←'document.getElementById(''',(id←'plt-',120⌶4),''')'
-        script←'Plotly.newPlot(',get,', ',data,', ',layout,', ',config,');'
+        script←'Plotly.newPlot(',get,', ',data,', ',layout,', ',cfg,');'
         '<div id="',id,'" style="',style,'"></div><script>',script,'</script>'
     }
 
     multi←{
         ⍺←()
-        config←configure ⍺
-        r←¯2↑1,⍴⍵
-        c←(grid:(rows:⊃r ⋄ columns:⊃⌽r ⋄ pattern:'independent'))
-        d←{(xaxis:'x',⍕⍵ ⋄ yaxis:'y',⍕⍵)(⎕NS,)⍨¨⍵⊃d}¨⍳≢d←,r⍴⍵
-        (config ⎕NS c)plot∊d
+        
+        ⍝ configuration and shape
+        c←config ⍺ ⋄ r←¯2↑1,⍴⍵
+        c ⎕NS←(grid:(rows:⊃r ⋄ columns:⊃⌽r ⋄ pattern:'independent'))
+
+        ⍝ multiplot of namespaces
+        d←{(xaxis:'x',⍕⍵ ⋄ yaxis:'y',⍕⍵)(⎕NS,)⍨⍵⊃d}¨⍳≢d←,r⍴⊃∘⌽⍤data¨⍵
+        c plot d
     }
 
 :EndNamespace

@@ -37,6 +37,7 @@ A number of plot types can be directly generated from arrays. Further control is
         ]Plt y x               ⍝ data series
         ]Plt labels x          ⍝ horizontal bars
         ]Plt y labels          ⍝ vertical bars
+        ]Plt ↓⍉↑y1 x1          ⍝ plot as points
         ]Plt (y2 x2)(y1 x1)    ⍝ multiple data series
         ]Plt labels x2 x1      ⍝ grouped horizontal bars
         ]Plt labels(x2 x1)     ⍝ stacked horizontal bars

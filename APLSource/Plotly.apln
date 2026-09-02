@@ -17,7 +17,7 @@
         inv←{0=80|⎕DR⊃⍵:(1↑⍵),∇1↓⍵ ⋄ ↓⍉↑⍵}
         (,326)≢∪⎕DR¨∊⍵:⊃∇/{
             ⍺←'group' ⋄ 1=≡⍵:layout(type:'bar' ⋄ y:⍵ ⋄ x:⍳≢⍵)
-            (3=≡⍵)∧1∧.=pts¨⍵:∇ inv¨⍵⊣layout ⎕NS←(mode:'markers')
+            (3=≡⍵)∧∧/pts¨⍵:∇ inv¨⍵⊣layout ⎕NS←(mode:'markers')
             pts ⍵:∇ inv ⍵⊣layout ⎕NS←(mode:'markers')
             0=80|⎕DR∊⊃⍵:'stack'∇ ¯1(↓,(1↑⍵),↑)¨⊂¨⍣(2=≡1↓⍵)⊢1↓⍵
             ((1=≡)∨0=80|⎕DR∘∊)⊃⌽⍵:'stack'∇,∘(¯1↑⍵)¨⊂¨⍣(2=≡¯1↓⍵)⊢¯1↓⍵

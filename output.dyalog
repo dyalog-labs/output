@@ -98,6 +98,7 @@
           r,←⊂'    ]Plt labels x          ⍝ horizontal bars'
           r,←⊂'    ]Plt y labels          ⍝ vertical bars'
           :If 1=level ⋄ r,←⊂']Plt -???  ⍝ for more examples' ⋄ →0 ⋄ :EndIf
+          r,←⊂'    ]Plt ↓⍉↑y1 x1          ⍝ plot as points'
           r,←⊂'    ]Plt (y2 x2)(y1 x1)    ⍝ multiple data series'
           r,←⊂'    ]Plt labels x2 x1      ⍝ grouped horizontal bars'
           r,←⊂'    ]Plt labels(x2 x1)     ⍝ stacked horizontal bars'

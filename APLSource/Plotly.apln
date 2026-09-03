@@ -67,8 +67,8 @@
         c ⎕NS←(grid:(rows:⊃r ⋄ columns:⊃⌽r ⋄ pattern:'independent'))
 
         ⍝ multiplot of namespaces
-        d←{(xaxis:'x',⍕⍵ ⋄ yaxis:'y',⍕⍵)(⎕NS,)⍨⍵⊃d}¨⍳≢d←,r⍴⊃∘⌽⍤data¨⍵
-        c plot d
+        d←{(xaxis:'x',⍕⍵ ⋄ yaxis:'y',⍕⍵)(⎕NS,)⍨¨⍵⊃d}¨⍳≢d←,r⍴⊃∘⌽⍤data¨⍵
+        c plot∊d
     }
 
 :EndNamespace

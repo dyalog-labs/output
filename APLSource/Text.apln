@@ -9,7 +9,8 @@
               ~(N ⍵)∨(1=≡⍵)∧∧/N¨⍵:⍵
               s←{
                   t←⍵ ⎕VGET(⊂'type' 'scatter')
-                  (⊂'name')∊⍵.⎕NL-2:t ⍵.(name y x)
+                  l←(⊂'false')≢⍵ ⎕VGET(⊂'showlegend'(⊂'true'))
+                  l∧(⊂'name')∊⍵.⎕NL-2:t ⍵.(name y x)
                   t({0::⍵.y ⋄ ⍵.(y x)}⍵)
               }¨⍵
               1<≢t←∪⊃¨s:⎕SIGNAL 6 ⋄ t←⊃t ⋄ s←⊃∘⌽¨s

@@ -54,7 +54,7 @@
             r←center plt
           :Case 'plotly'
             plt←config{⍺←⊢ ⋄ parms.m:⍺ plotlym ⍵ ⋄ ⍺ plotly ⍵}##.THIS⍎expr
-            _←window html&HTML expr hplotly plt
+            _←window html&1 HTML expr hplotly plt
           :Else
             ⎕SIGNAL 5
           :EndSelect
@@ -151,11 +151,12 @@
 
     :Section UTILS
       HTML←{
-          title head body←⍵
+          title head body←⍵ ⋄ ⍺←0
           title←'<title>',('<' '\&'⎕R'\&lt;' '\&amp;'⊢title),'</title>'
           head←'<head><meta charset="utf-8">',title,head,'</head>'
           style←'width:100vw;height:100vh;display:flex;align-items:center;margin:0'
-          body←'<body style="',style,'" oncontextmenu="return false">',body,'</body>'
+          style{⍵:' style="',⍺,'"' ⋄ ''}←⍺
+          body←'<body',style,' oncontextmenu="return false">',body,'</body>'
           '<!DOCTYPE html><html>',head,body,'</html>'
       }
     :EndSection

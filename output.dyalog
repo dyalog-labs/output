@@ -29,7 +29,7 @@
       r.Parse←⊂''
     ∇
 
-    ∇ r←{type}Run(cmd input);parms;config;expr;parser;plt;center;_
+    ∇ r←{type}Run(cmd input);parms;config;window;center;expr;plt;_
       parms←(⎕NEW ⎕SE.Parser'-t[∊]0 1 -m[∊]0 1 -type∊plotly tabulator text -config= -window=').Parse input
       :If parms.config≡0 ⋄ config←⊢ ⋄ :Else ⋄ config←##.THIS⍎parms.config ⋄ :EndIf
       :If parms.window≡0 ⋄ window←⊢ ⋄ :Else ⋄ window←##.THIS⍎parms.window ⋄ :EndIf

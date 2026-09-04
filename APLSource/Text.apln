@@ -29,7 +29,7 @@
           draw.plot w
       }
 
-      multi←{⍺←⊢ ⋄ ⍺ plot¨⍵}
+      multiplot←{⍺←⊢ ⋄ ⍺ plot¨⍵}
 
       table←{
           ⍺←⊢

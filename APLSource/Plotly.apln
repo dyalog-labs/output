@@ -44,6 +44,18 @@
         }⍵
     }
 
+    multidata←{
+        ⍺←()
+        
+        ⍝ configuration and shape
+        c←config ⍺ ⋄ r←¯2↑1,⍴⍵
+        c ⎕NS←(grid:(rows:⊃r ⋄ columns:⊃⌽r ⋄ pattern:'independent'))
+
+        ⍝ set axis of each plot
+        d←{(xaxis:'x',⍕⍵ ⋄ yaxis:'y',⍕⍵)(⎕NS,)⍨¨⍵⊃d}¨⍳≢d←,r⍴⊃∘⌽⍤data¨⍵
+        c(d⍴⍨⍴⍵)
+    }
+
     plot←{
         ⍺←()
 
@@ -73,16 +85,6 @@
         '<div id="',id,'" style="',style,'"></div><script>',script,'</script>'
     }
 
-    multi←{
-        ⍺←()
-        
-        ⍝ configuration and shape
-        c←config ⍺ ⋄ r←¯2↑1,⍴⍵
-        c ⎕NS←(grid:(rows:⊃r ⋄ columns:⊃⌽r ⋄ pattern:'independent'))
-
-        ⍝ multiplot of namespaces
-        d←{(xaxis:'x',⍕⍵ ⋄ yaxis:'y',⍕⍵)(⎕NS,)⍨¨⍵⊃d}¨⍳≢d←,r⍴⊃∘⌽⍤data¨⍵
-        c plot∊d
-    }
+    multiplot←{⍺←⊢ ⋄ c d←⍺ multidata ⍵ ⋄ c plot∊d}
 
 :EndNamespace

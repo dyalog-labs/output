@@ -11,11 +11,14 @@
     hplotly←⎕SE.Output.Plotly.head
     plotly←⎕SE.Output.Plotly.plot
     plotlym←⎕SE.Output.Plotly.multi
+    plotlyns←⎕SE.Output.Plotly.data
     plottxt←⎕SE.Output.Text.plot
     plottxtm←⎕SE.Output.Text.multi
     tabletxt←⎕SE.Output.Text.table
+    centertxt←⎕SE.Output.Text.draw.center
     htabulator←⎕SE.Output.Tabulator.head
     tabulator←⎕SE.Output.Tabulator.table
+    tabulatorns←⎕SE.Output.Tabulator.config
     :EndSection
 
     :Section UCMD
@@ -30,16 +33,15 @@
     ∇
 
     ∇ r←{type}Run(cmd input);parms;config;window;center;expr;plt;_
-      parms←(⎕NEW ⎕SE.Parser'-t[∊]0 1 -m[∊]0 1 -type∊plotly tabulator text -config= -window=').Parse input
+      parms←(⎕NEW ⎕SE.Parser'-t[∊]0 1 -m[∊]0 1 -n[∊]0 1 -type∊plotly tabulator text -config= -window=').Parse input
       :If parms.config≡0 ⋄ config←⊢ ⋄ :Else ⋄ config←##.THIS⍎parms.config ⋄ :EndIf
       :If parms.window≡0 ⋄ window←⊢ ⋄ :Else ⋄ window←##.THIS⍎parms.window ⋄ :EndIf
       :If 3≠⎕NC'window' ⋄ :AndIf 1=≢window ⋄ window,←⌊0.5+window×16÷9 ⋄ :EndIf
-      :If 0=⎕NC'type'
-          :If 0=80|⎕DR parms.t ⋄ parms.t←⍎parms.t ⋄ :EndIf
-          type←'text'⊣⍣parms.t⊢parms.type
-      :EndIf
-      center←window∘⎕SE.Output.Text.draw.center⍣(⊃3≠⎕NC'window')
-      expr←'^ +| +$'⎕R''⊢'^\s*-t\s+'⎕R''⊢'^\s*-m\s+'⎕R''⊢'-\w+=(\S+|(''[^'']*?'')+)'⎕R''⊢input
+      :If 0=80|⎕DR parms.t ⋄ parms.t←⍎parms.t ⋄ :EndIf
+      :If 0=⎕NC'type' ⋄ type←parms.type ⋄ :EndIf
+      :If 0=⎕NC'type' ⋄ type←'text'⊣⍣parms.t⊢parms.type ⋄ :EndIf
+      center←window∘centertxt⍣(⊃3≠⎕NC'window')
+      expr←'^ +| +$'⎕R''⊢'^\s*-[tmn]\s+'⎕R''⊢'-\w+=(\S+|(''[^'']*?'')+)'⎕R''⊢input
       :Select cmd
       :Case 'Plt'
           :Select type
@@ -53,6 +55,7 @@
             plt←config{⍺←⊢ ⋄ parms.m:⍺ plottxtm ⍵ ⋄ ⍺ plottxt ⍵}##.THIS⍎expr
             r←center plt
           :Case 'plotly'
+            :If parms.n ⋄ r←config∘plotlyns{parms.m:⍺⍺¨⍵ ⋄ ⍺⍺ ⍵}##.THIS⍎expr ⋄ →0 ⋄ :EndIf
             plt←config{⍺←⊢ ⋄ parms.m:⍺ plotlym ⍵ ⋄ ⍺ plotly ⍵}##.THIS⍎expr
             _←window html&1 HTML expr hplotly plt
           :Else
@@ -69,6 +72,7 @@
           :Case 'text'
             r←center config tabletxt ##.THIS⍎expr
           :Case 'tabulator'
+            :If parms.n ⋄ r←config tabulatorns ##.THIS⍎expr ⋄ →0 ⋄ :EndIf
             _←window html&HTML expr htabulator(config tabulator ##.THIS⍎expr)
           :Else
             ⎕SIGNAL 5
@@ -88,6 +92,7 @@
           r,←⊂'-type=plotly  plot using plotly and HTMLRenderer or Ride'
           r,←⊂'-type=text    plot using text'
           r,←⊂'-t            equivalent to -type=text'
+          r,←⊂'-n            return namespace'
           r,←⊂''
           r,←⊂'-m            multiplot from <data> array'
           r,←⊂''
@@ -114,6 +119,10 @@
           r,←⊂'    ]Plt -config=c y x     ⍝ data series with config'
           r,←⊂'    ]Plt -win=1024 y x     ⍝ with window size'
           r,←⊂''
+          r,←⊂'    ]ld←plt -n -type=plotly y x  ⍝ get namespace'
+          r,←⊂'    layout data←ld         ⍝ layout and data'
+          r,←⊂'    ]plt -c=layout data    ⍝ plot'
+          r,←⊂''
           r,←⊂'See https://plotly.com/javascript/reference/ for more options'
       :Case 'Tbl'
           r←⊂List[2].Desc
@@ -125,6 +134,7 @@
           r,←⊂'-type=tabulator  tabulate using tabulator and HTMLRenderer or Ride'
           r,←⊂'-type=text       tabulate using text'
           r,←⊂'-t               equivalent to -type=text'
+          r,←⊂'-n               return namespace'
           r,←⊂''
           r,←⊂'-config=         configuration (or title) for each column'
           r,←⊂''

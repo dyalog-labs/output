@@ -36,10 +36,10 @@
       }
 
       multitable←{
-          ⍺←⊢ ⋄ cfg←⍺
+          ⍺←⊢ ⋄ cfg←(⍴⍵)⍴⍺
           r←¯2↑1,⍴⍵ ⋄ t←r⍴⍵
           '<table style="width:100%;table-layout:fixed">','</table>',⍨⊃,/{
-              '<tr>','</tr>',⍨⊃,/⍵{'<td>','</td>',⍨cfg table t[⍺;⍵]}¨⍳⊃⌽r
+              '<tr>','</tr>',⍨⊃,/⍵{'<td>','</td>',⍨(⊃cfg[⍺;⍵])table(⊃t[⍺;⍵])}¨⍳⊃⌽r
           }¨⍳⊃r
       }
 

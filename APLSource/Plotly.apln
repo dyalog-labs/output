@@ -25,6 +25,7 @@
         pts←{(2=≡⍵)∧(1∧.=≡¨⍵)∧(2∧.=≢¨⍵)∨(0=80|⎕DR⊃⍵)∧2∧.=≢¨1↓⍵}
         inv←{0=80|⎕DR⊃⍵:(1↑⍵),∇1↓⍵ ⋄ ↓⍉↑⍵}
         (⍺ ⎕VGET⊂'barmode' 'group'){
+            2=≢⍴⍵:layout(type:'surface' ⋄ z:↓⍵)
             1=≡⍵:layout(type:'bar' ⋄ y:⍵ ⋄ x:⍳≢⍵)
             (3=≡⍵)∧∧/pts¨⍵:∇ inv¨⍵⊣layout ⎕NS←(mode:'markers')
             pts ⍵:∇ inv ⍵⊣layout ⎕NS←(mode:'markers')

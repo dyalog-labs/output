@@ -19,6 +19,7 @@
     centertxt←⎕SE.Output.Text.draw.center
     htabulator←⎕SE.Output.Tabulator.head
     tabulator←⎕SE.Output.Tabulator.table
+    tabulatorm←⎕SE.Output.Tabulator.multitable
     tabulatorns←⎕SE.Output.Tabulator.config
     :EndSection
 
@@ -33,59 +34,40 @@
       r.Parse←⊂''
     ∇
 
-    ∇ r←{type}Run(cmd input);parms;config;window;center;expr;plt;_
-      parms←(⎕NEW ⎕SE.Parser'-t[∊]0 1 -m[∊]0 1 -n[∊]0 1 -type∊plotly tabulator text -config= -window=').Parse input
+    ∇ r←Run(cmd input);parms;config;window;center;type;expr;out
+      parms←(⎕NEW ⎕SE.Parser'-t[∊]0 1 -m[∊]0 1 -type∊plotly tabulator text ns -config= -window=').Parse input
       :If parms.config≡0 ⋄ config←⊢ ⋄ :Else ⋄ config←##.THIS⍎parms.config ⋄ :EndIf
       :If parms.window≡0 ⋄ window←⊢ ⋄ :Else ⋄ window←##.THIS⍎parms.window ⋄ :EndIf
       :If 3≠⎕NC'window' ⋄ :AndIf 1=≢window ⋄ window,←⌊0.5+window×16÷9 ⋄ :EndIf
       :If 0=80|⎕DR parms.t ⋄ parms.t←⍎parms.t ⋄ :EndIf
-      :If 0=⎕NC'type' ⋄ type←'text'⊣⍣parms.t⊢parms.type ⋄ :EndIf
       center←window∘centertxt⍣(⊃3≠⎕NC'window')
-      expr←'^ +| +$'⎕R''⊢'(^\s*-[tmn]\s+)*'⎕R''⍤('^\s*-\w+=(\S+|(''[^'']*?'')+)'⎕R'')⍣≡input
+      type←{('text'⊣⍣(0≡parms.type)⊢'ns')⊣⍣parms.t⊢⍵⊣⍣(0≡parms.type)⊢parms.type}
+      expr←'^ +| +$'⎕R''⊢'(^\s*-[tm]\s+)*'⎕R''⍤('^\s*-\w+=(\S+|(''[^'']*?'')+)'⎕R'')⍣≡input
       :Select cmd
       :Case 'Plt'
-          :Select type
-          :Case 0
-            :Trap 11
-                :If parms.n
-                    r←'plotly'Run'Plt'input
-                :Else
-                    'plotly'Run'Plt'input
-                :EndIf
-            :Else
-                r←'text'Run'Plt'input
-            :EndTrap
+          :Select type'plotly'
           :Case 'text'
-            plt←config{⍺←⊢ ⋄ parms.m:⍺ plottxtm ⍵ ⋄ ⍺ plottxt ⍵}##.THIS⍎expr
-            r←center plt
+            out←config{⍺←⊢ ⋄ parms.m:⍺ plottxtm ⍵ ⋄ ⍺ plottxt ⍵}##.THIS⍎expr
+            r←center out
+          :Case 'ns'
+            r←config{⍺←⊢ ⋄ parms.m:⍺ plotlynsm ⍵ ⋄ ⍺ plotlyns ⍵}##.THIS⍎expr
           :Case 'plotly'
-            :If parms.n
-                r←config{⍺←⊢ ⋄ parms.m:⍺ plotlynsm ⍵ ⋄ ⍺ plotlyns ⍵}##.THIS⍎expr
-            :Else
-                plt←config{⍺←⊢ ⋄ parms.m:⍺ plotlym ⍵ ⋄ ⍺ plotly ⍵}##.THIS⍎expr
-                _←window html&1 HTML expr hplotly plt
-            :EndIf
+            out←config{⍺←⊢ ⋄ parms.m:⍺ plotlym ⍵ ⋄ ⍺ plotly ⍵}##.THIS⍎expr
+            out←window html&1 HTML expr hplotly out
           :Else
-            ⎕SIGNAL 5
+            ⎕SIGNAL 6
           :EndSelect
       :Case 'Tbl'
-          :Select type
-          :Case 0
-            :Trap 11
-                'tabulator'Run'Tbl'input
-            :Else
-                'text'Run'Tbl'input
-            :EndTrap
+          :Select type'tabulator'
           :Case 'text'
-            r←center config tabletxt ##.THIS⍎expr
+            r←center config{⍺←⊢ ⋄ parms.m:⍺ tabletxt¨⍵ ⋄ ⍺ tabletxt ⍵}##.THIS⍎expr
+          :Case 'ns'
+            r←config{⍺←⊢ ⋄ parms.m:⍺ tabulatorns¨⍵ ⋄ ⍺ tabulatorns ⍵}##.THIS⍎expr
           :Case 'tabulator'
-            :If parms.n
-                r←config tabulatorns ##.THIS⍎expr
-            :Else
-                _←window html&HTML expr htabulator(config tabulator ##.THIS⍎expr)
-            :EndIf
+            out←config{⍺←⊢ ⋄ parms.m:⍺ tabulatorm ⍵ ⋄ ⍺ tabulator ⍵}##.THIS⍎expr
+            out←window html&HTML expr htabulator out
           :Else
-            ⎕SIGNAL 5
+            ⎕SIGNAL 6
           :EndSelect
       :EndSelect
     ∇ 
@@ -101,8 +83,7 @@
           r,←⊂''
           r,←⊂'-type=plotly  plot using plotly and HTMLRenderer or Ride'
           r,←⊂'-type=text    plot using text'
-          r,←⊂'-t            equivalent to -type=text'
-          r,←⊂'-n            return namespace'
+          r,←⊂'-t            set -type=text or return namespace'
           r,←⊂''
           r,←⊂'-m            multiplot from <data> array'
           r,←⊂''
@@ -117,6 +98,7 @@
           :If 1=level ⋄ r,←⊂']Plt -???  ⍝ for more examples' ⋄ →0 ⋄ :EndIf
           r,←⊂'    ]Plt ↓⍉↑y1 x1          ⍝ plot as points'
           r,←⊂'    ]Plt (y2 x2)(y1 x1)    ⍝ multiple data series'
+          r,←⊂'    ]Plt -m (y2 x2)(y1 x1) ⍝ multiple plots'
           r,←⊂'    ]Plt labels x2 x1      ⍝ grouped horizontal bars'
           r,←⊂'    ]Plt labels(x2 x1)     ⍝ stacked horizontal bars'
           r,←⊂'    ]Plt y2 y1 labels      ⍝ grouped vertical bars'
@@ -129,7 +111,7 @@
           r,←⊂'    ]Plt -config=c y x     ⍝ data series with config'
           r,←⊂'    ]Plt -win=1024 y x     ⍝ with window size'
           r,←⊂''
-          r,←⊂'    ]ld←Plt -n -type=plotly y x  ⍝ get namespace'
+          r,←⊂'    ]ld←Plt -t -type=plotly y x  ⍝ get namespace'
           r,←⊂'    layout data←ld         ⍝ layout and data'
           r,←⊂'    ]Plt -c=layout ∊data   ⍝ plot'
           r,←⊂''

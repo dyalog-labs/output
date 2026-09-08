@@ -11,7 +11,9 @@
           1=≡⍵:().⎕VSET↓⍉↑n(↓⍉↑⍵.⎕VGET⊂n←(⊃⍵).⎕NL ¯2)
           k v←↓⍉↑⍵.⎕VGET ¯2 ⋄ ⊢(⊂⍬)(⎕NS⍤⊣⎕VSET{↓⍉↑k ⍵})¨↓⍉↑v ⍝ namespace of vectors to vector of namespaces (!)
       }
+
       sort←{⍺←⊃⍵.⎕NL-2 ⋄ flip ⍺ ⍺⍺{⍵[⍺⍺ ⍵.⎕VGET⊂⍺]}flip ⍵}
+
       config←{
           default_config←(layout:'fitColumns')
           ⍺←{
@@ -26,10 +28,19 @@
               ⎕NS default_config(columns:⍺)⍵
           }(data:flip ⍵)
       }
+
       table←{
           ⍺←⊢ ⋄ cfg←⎕JSON ⍺ config ⍵
           script←'var table = new Tabulator("#',(id←'tbl-',120⌶4),'", ',cfg,');'
           '<div id="',id,'"></div><script>',script,'</script>'
+      }
+
+      multitable←{
+          ⍺←⊢ ⋄ cfg←⍺
+          r←¯2↑1,⍴⍵ ⋄ t←r⍴⍵
+          '<table style="width:100%;table-layout:fixed">','</table>',⍨⊃,/{
+              '<tr>','</tr>',⍨⊃,/⍵{'<td>','</td>',⍨cfg table t[⍺;⍵]}¨⍳⊃⌽r
+          }¨⍳⊃r
       }
 
 :EndNamespace

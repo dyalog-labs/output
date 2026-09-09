@@ -35,24 +35,23 @@
     ∇
 
     ∇ r←Run(cmd input);parms;config;window;center;type;expr;out
-      parms←(⎕NEW ⎕SE.Parser'-t[∊]0 1 -m[∊]0 1 -type∊plotly tabulator text ns -config= -window=').Parse input
+      parms←(⎕NEW ⎕SE.Parser'-t[∊]0 1 -m[∊]0 1 -type∊plotly tabulator ns text -config= -window=').Parse input
       :If parms.config≡0 ⋄ config←⊢ ⋄ :Else ⋄ config←##.THIS⍎parms.config ⋄ :EndIf
       :If parms.window≡0 ⋄ window←⊢ ⋄ :Else ⋄ window←##.THIS⍎parms.window ⋄ :EndIf
       :If 3≠⎕NC'window' ⋄ :AndIf 1=≢window ⋄ window,←⌊0.5+window×16÷9 ⋄ :EndIf
       :If 0=80|⎕DR parms.t ⋄ parms.t←⍎parms.t ⋄ :EndIf
       center←window∘centertxt⍣(⊃3≠⎕NC'window')
-      type←{('text'⊣⍣(0≡parms.type)⊢'ns')⊣⍣parms.t⊢⍵⊣⍣(0≡parms.type)⊢parms.type}
+      type←{parms.t:'text' ⋄ 0≡parms.type:⍵ ⋄ parms.type}
       expr←'^ +| +$'⎕R''⊢'(^\s*-[tm]\s+)*'⎕R''⍤('^\s*-\w+=(\S+|(''[^'']*?'')+)'⎕R'')⍣≡input
       :Select cmd
       :Case 'Plt'
           :Select type'plotly'
           :Case 'text'
-            out←config{⍺←⊢ ⋄ parms.m:⍺ plottxtm ⍵ ⋄ ⍺ plottxt ⍵}##.THIS⍎expr
-            r←center out
+            r←center config{⍺←⊢ ⋄ parms.m:⍺ plottxtm ⍵ ⋄ ⍺ plottxt ⍵}##.⎕THIS⍎expr
           :Case 'ns'
-            r←config{⍺←⊢ ⋄ parms.m:⍺ plotlynsm ⍵ ⋄ ⍺ plotlyns ⍵}##.THIS⍎expr
+            r←config{⍺←⊢ ⋄ parms.m:⍺ plotlynsm ⍵ ⋄ ⍺ plotlyns ⍵}##.⎕THIS⍎expr
           :Case 'plotly'
-            out←config{⍺←⊢ ⋄ parms.m:⍺ plotlym ⍵ ⋄ ⍺ plotly ⍵}##.THIS⍎expr
+            out←config{⍺←⊢ ⋄ parms.m:⍺ plotlym ⍵ ⋄ ⍺ plotly ⍵}##.⎕THIS⍎expr
             out←window html&1 HTML expr hplotly out
           :Else
             ⎕SIGNAL 6
@@ -60,11 +59,11 @@
       :Case 'Tbl'
           :Select type'tabulator'
           :Case 'text'
-            r←center config{⍺←⊢ ⋄ parms.m:⍺ tabletxt¨⍵ ⋄ ⍺ tabletxt ⍵}##.THIS⍎expr
+            r←center config{⍺←⊢ ⋄ parms.m:⍺ tabletxt¨⍵ ⋄ ⍺ tabletxt ⍵}##.⎕THIS⍎expr
           :Case 'ns'
-            r←config{⍺←⊢ ⋄ parms.m:⍺ tabulatorns¨⍵ ⋄ ⍺ tabulatorns ⍵}##.THIS⍎expr
+            r←config{⍺←⊢ ⋄ parms.m:⍺ tabulatorns¨⍵ ⋄ ⍺ tabulatorns ⍵}##.⎕THIS⍎expr
           :Case 'tabulator'
-            out←config{⍺←⊢ ⋄ parms.m:⍺ tabulatorm ⍵ ⋄ ⍺ tabulator ⍵}##.THIS⍎expr
+            out←config{⍺←⊢ ⋄ parms.m:⍺ tabulatorm ⍵ ⋄ ⍺ tabulator ⍵}##.⎕THIS⍎expr
             out←window html&HTML expr htabulator out
           :Else
             ⎕SIGNAL 6
@@ -77,18 +76,17 @@
       :Case 'Plt'
           r←⊂List[1].Desc
           r,←⊂''
-          r,←⊂']Plt <data> [-type={plotly|text}] [-m] [-config=<configuration>]'
+          r,←⊂']Plt <data> [-type={plotly|text|ns}] [-t] [-m] [-config=<configuration>]'
           :If 0=level ⋄ r,←⊂']Plt -??  ⍝ for details and examples' ⋄ →0 ⋄ :EndIf
           r,←⊂'<data>        data to plot'
           r,←⊂''
-          r,←⊂'-type=plotly  plot using plotly and HTMLRenderer or Ride'
+          r,←⊂'-type=plotly  plot using plotly and HTMLRenderer or Ride (default)'
           r,←⊂'-type=text    plot using text'
-          r,←⊂'-t            set -type=text or return namespace'
-          r,←⊂''
-          r,←⊂'-m            multiplot from <data> array'
-          r,←⊂''
-          r,←⊂'-config=      configuration parameters'
-          r,←⊂'-window=      window size'
+          r,←⊂'-type=ns      return configuration and data namespaces'
+          r,←⊂'-t            equivalent to -type=text'
+          r,←⊂'-m            multiple plots from <data> array'
+          r,←⊂'-config=      configuration namespace of plot size'
+          r,←⊂'-window=      window size (height or height and width)'
           r,←⊂''
           r,←⊂'Examples:'
           r,←⊂'    ]Plt y                 ⍝ values as vertical bars'
@@ -111,7 +109,7 @@
           r,←⊂'    ]Plt -config=c y x     ⍝ data series with config'
           r,←⊂'    ]Plt -win=1024 y x     ⍝ with window size'
           r,←⊂''
-          r,←⊂'    ]ld←Plt -t -type=plotly y x  ⍝ get namespace'
+          r,←⊂'    ]ld←Plt -type=ns y x   ⍝ get namespaces'
           r,←⊂'    layout data←ld         ⍝ layout and data'
           r,←⊂'    ]Plt -c=layout ∊data   ⍝ plot'
           r,←⊂''
@@ -119,15 +117,15 @@
       :Case 'Tbl'
           r←⊂List[2].Desc
           r,←⊂''
-          r,←⊂']Tbl <data> [-type={tabulator|text}] [-config=<configuration>]'
+          r,←⊂']Tbl <data> [-type={tabulator|text|ns}] [-t] [-m] [-config=<configuration>]'
           :If 0=level ⋄ r,←⊂']Tbl -??  ⍝ for details and examples' ⋄ →0 ⋄ :EndIf
           r,←⊂'<data>           data to tabulate'
           r,←⊂''
           r,←⊂'-type=tabulator  tabulate using tabulator and HTMLRenderer or Ride'
           r,←⊂'-type=text       tabulate using text'
+          r,←⊂'-type=ns         return namespace'
           r,←⊂'-t               equivalent to -type=text'
-          r,←⊂'-n               return namespace'
-          r,←⊂''
+          r,←⊂'-m               multiple tables from <data> array'
           r,←⊂'-config=         configuration (or title) for each column'
           r,←⊂''
           r,←⊂'Examples:'

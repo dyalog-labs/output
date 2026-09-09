@@ -20,17 +20,16 @@ A number of plot types can be directly generated from arrays. Further control is
 
     Plot data
 
-    ]Plt <data> [-type={plotly|text}] [-m] [-config=<configuration>]
+    ]Plt <data> [-type={plotly|text|ns}] [-t] [-m] [-config=<configuration>]
     <data>        data to plot
 
-    -type=plotly  plot using plotly and HTMLRenderer or Ride
+    -type=plotly  plot using plotly and HTMLRenderer or Ride (default)
     -type=text    plot using text
+    -type=ns      return configuration and data namespaces
     -t            equivalent to -type=text
-
-    -m            multiplot from <data> array
-
-    -config=      configuration parameters
-    -window=      window size
+    -m            multiple plots from <data> array
+    -config=      configuration namespace of plot size
+    -window=      window size (height or height and width)
 
     Examples:
         ]Plt y                 ⍝ values as vertical bars
@@ -39,6 +38,7 @@ A number of plot types can be directly generated from arrays. Further control is
         ]Plt y labels          ⍝ vertical bars
         ]Plt ↓⍉↑y1 x1          ⍝ plot as points
         ]Plt (y2 x2)(y1 x1)    ⍝ multiple data series
+        ]Plt -m (y2 x2)(y1 x1) ⍝ multiple plots
         ]Plt labels x2 x1      ⍝ grouped horizontal bars
         ]Plt labels(x2 x1)     ⍝ stacked horizontal bars
         ]Plt y2 y1 labels      ⍝ grouped vertical bars
@@ -50,6 +50,10 @@ A number of plot types can be directly generated from arrays. Further control is
         c←(xaxis:(title:'X'))  ⍝ config namespace
         ]Plt -config=c y x     ⍝ data series with config
         ]Plt -win=1024 y x     ⍝ with window size
+
+        ]ld←Plt -type=ns y x   ⍝ get namespaces
+        layout data←ld         ⍝ layout and data
+        ]Plt -c=layout ∊data   ⍝ plot
 
     See https://plotly.com/javascript/reference/ for more options
 
@@ -63,14 +67,15 @@ Simple tables can be directly generated from arrays. Further control is possible
 
     Tabulate data
 
-    ]Tbl <data> [-type={tabulator|text}] [-config=<configuration>]
+    ]Tbl <data> [-type={tabulator|text|ns}] [-t] [-m] [-config=<configuration>]
     <data>           data to tabulate
 
     -type=tabulator  tabulate using tabulator and HTMLRenderer or Ride
     -type=text       tabulate using text
+    -type=ns         return namespace
     -t               equivalent to -type=text
-
-    -config=         configuration for each column
+    -m               multiple tables from <data> array
+    -config=         configuration (or title) for each column
 
     Examples:
         ]Tbl y1 y2 y3               ⍝ table with 3 columns
@@ -85,6 +90,7 @@ Simple tables can be directly generated from arrays. Further control is possible
         columns,←(title:'Date of Birth' ⋄ field:'dob' ⋄ sorter:'date' ⋄ hozAlign:'center')
         ]tbl -c=columns td     ⍝ tabulator table
         ]tbl -t -c=columns td  ⍝ text table
+        ]tbl -t -c=columns.title td.(name age dob)  ⍝ column titles as config
 
     See https://tabulator.info/docs/6.4/columns for more options
 
@@ -102,19 +108,29 @@ Plotly interface namespace.
 
 - `plot` returns a `<div>` element with a plot of the given data, following the same conventions of the `]Plt` command. The optional left argument specifies size or a config namespace with additional options
 
-- `multi` similar to `plot` but each element of its right argument is interpreted as a different subplot
+- `multiplot` is similar to `plot` but each element of its right argument is interpreted as a different subplot
 
-- `head` HTML header to download plotly script from CDN
+- `data` returns configuration and data namespaces to generate plot
 
-- `configure` configuration namespace from either width or height and width
+- `multidata` returns configuration and data namespaces to generate multiple plots
+
+- `head` is the HTML header to download plotly script from CDN
+
+- `color` is the default color palette used by plotly
+
+- `configure` returns configuration namespace from either width or height and width
 
 #### `⎕SE.Output.Tabulator`
 
 Tabulator interface namespace.
 
-- `table` returns a `<div>` element with a table of the given data, following the same conventions of the `]Tbl` command. The optional left argument specifies additional options.
+- `table` returns a `<div>` element with a table of the given data, following the same conventions of the `]Tbl` command. The optional left argument specifies additional options
 
-- `head` HTML header to download tabulator script and css from CDN
+- `multitable` is similar to `table` but each element of its right argument is interpreted as a different subtable
+
+- `config` returns namespace to generate table
+
+- `head` is HTML header to download tabulator script and css from CDN
 
 - `sort` takes grading function (`⍋` or `⍒`) left operand and returns sorted data namespace, optionally by the given field(s)
 

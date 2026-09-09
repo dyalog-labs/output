@@ -14,7 +14,6 @@
     plotlyns←⎕SE.Output.Plotly.data
     plotlynsm←⎕SE.Output.Plotly.multidata
     plottxt←⎕SE.Output.Text.plot
-    plottxtm←⎕SE.Output.Text.multiplot
     tabletxt←⎕SE.Output.Text.table
     centertxt←⎕SE.Output.Text.draw.center
     htabulator←⎕SE.Output.Tabulator.head
@@ -47,7 +46,7 @@
       :Case 'Plt'
           :Select type'plotly'
           :Case 'text'
-            r←center config{⍺←⊢ ⋄ parms.m:⍺ plottxtm ⍵ ⋄ ⍺ plottxt ⍵}##.⎕THIS⍎expr
+            r←center config{⍺←⊢ ⋄ parms.m:⍺ plottxt¨⍵ ⋄ ⍺ plottxt ⍵}##.⎕THIS⍎expr
           :Case 'ns'
             r←config{⍺←⊢ ⋄ parms.m:⍺ plotlynsm ⍵ ⋄ ⍺ plotlyns ⍵}##.⎕THIS⍎expr
           :Case 'plotly'

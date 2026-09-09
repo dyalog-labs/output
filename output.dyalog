@@ -46,11 +46,11 @@
       :Case 'Plt'
           :Select type'plotly'
           :Case 'text'
-            r←center config{⍺←⊢ ⋄ parms.m:⍺ plottxt¨⍵ ⋄ ⍺ plottxt ⍵}##.⎕THIS⍎expr
+            r←center config{⍺←⊢ ⋄ parms.m:⍺ plottxt¨⍵ ⋄ ⍺ plottxt ⍵}##.THIS⍎expr
           :Case 'ns'
-            r←config{⍺←⊢ ⋄ parms.m:⍺ plotlynsm ⍵ ⋄ ⍺ plotlyns ⍵}##.⎕THIS⍎expr
+            r←config{⍺←⊢ ⋄ parms.m:⍺ plotlynsm ⍵ ⋄ ⍺ plotlyns ⍵}##.THIS⍎expr
           :Case 'plotly'
-            out←config{⍺←⊢ ⋄ parms.m:⍺ plotlym ⍵ ⋄ ⍺ plotly ⍵}##.⎕THIS⍎expr
+            out←config{⍺←⊢ ⋄ parms.m:⍺ plotlym ⍵ ⋄ ⍺ plotly ⍵}##.THIS⍎expr
             out←window html&1 HTML expr hplotly out
           :Else
             ⎕SIGNAL 6
@@ -58,11 +58,11 @@
       :Case 'Tbl'
           :Select type'tabulator'
           :Case 'text'
-            r←center config{⍺←⊢ ⋄ parms.m:⍺ tabletxt¨⍵ ⋄ ⍺ tabletxt ⍵}##.⎕THIS⍎expr
+            r←center config{⍺←⊢ ⋄ parms.m:⍺ tabletxt¨⍵ ⋄ ⍺ tabletxt ⍵}##.THIS⍎expr
           :Case 'ns'
-            r←config{⍺←⊢ ⋄ parms.m:⍺ tabulatorns¨⍵ ⋄ ⍺ tabulatorns ⍵}##.⎕THIS⍎expr
+            r←config{⍺←⊢ ⋄ parms.m:⍺ tabulatorns¨⍵ ⋄ ⍺ tabulatorns ⍵}##.THIS⍎expr
           :Case 'tabulator'
-            out←config{⍺←⊢ ⋄ parms.m:⍺ tabulatorm ⍵ ⋄ ⍺ tabulator ⍵}##.⎕THIS⍎expr
+            out←config{⍺←⊢ ⋄ parms.m:⍺ tabulatorm ⍵ ⋄ ⍺ tabulator ⍵}##.THIS⍎expr
             out←window html&HTML expr htabulator out
           :Else
             ⎕SIGNAL 6

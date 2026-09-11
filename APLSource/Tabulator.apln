@@ -6,8 +6,7 @@
     head,←'<script type="text/javascript" src="https://unpkg.com/tabulator-tables@6.4.0/dist/js/tabulator.min.js"></script>'
 
       flip←{
-          2=≢⍴⍵:↓⍵
-          2≤|≡⍵:↓⍉↑⍵
+          2<≢⍴⍵:⎕SIGNAL 4 ⋄ 2=≢⍴⍵:↓⍵ ⋄ 2≤|≡⍵:↓⍉↑⍵
           1=≡⍵:().⎕VSET↓⍉↑n(↓⍉↑⍵.⎕VGET⊂n←(⊃⍵).⎕NL ¯2)
           k v←↓⍉↑⍵.⎕VGET ¯2 ⋄ ⊢(⊂⍬)(⎕NS⍤⊣⎕VSET{↓⍉↑k ⍵})¨↓⍉↑v ⍝ namespace of vectors to vector of namespaces (!)
       }
@@ -15,16 +14,22 @@
       sort←{⍺←⊃⍵.⎕NL-2 ⋄ flip ⍺ ⍺⍺{⍵[⍺⍺ ⍵.⎕VGET⊂⍺]}flip ⍵}
 
       config←{
-          default_config←(layout:'fitColumns')
+          2<r←≢⍴⍵:⎕SIGNAL 4
+          (2=r)∧0=⎕NC'⍺':∇{
+              ⊃0∧.=80|⎕DR¨h←,1↑⍵:(↓⍉1↓⍵)⍺⍺⍨h{(field:⍕⍵ ⋄ title:⍺)}¨(⍳≢↓⍉⍵)-⎕IO
+              ⍺⍺ ↓⍉⍵
+          }⍵
           ⍺←{
               9.1=42 ⎕ATX'⍵':{(field:⍵ ⋄ title:⍵)}¨⍵.⎕NL ¯2
-              2=≢⍴⍵:∇↓⍉⍵
               {(field:⍕⍵)}¨(⍳≢⍵)-⎕IO
           }⍵
           0∧.=80|⎕DR¨⍺:⍵∇⍨⍺{(field:⍕⍵ ⋄ title:⍺)}¨(⍳≢⍵)-⎕IO
+          1≡2|⎕DR ⍺:⎕NS(height:⍺)(∇⍵)
           ⊃0∧.=⍺.⎕NC⊂'field':⍵∇⍨⍺⎕NS¨⍨{(field:⍕⍵)}¨(⍳≢⍵)-⎕IO
-          ⍺{a←⍺
-              0<⎕NC'a.columns':⎕NS default_config ⍺ ⍵
+
+          default_config←(layout:'fitColumns')
+          ⍺{
+              0<⎕NC'⍺.columns':⎕NS default_config ⍺ ⍵
               ⎕NS default_config(columns:⍺)⍵
           }(data:flip ⍵)
       }

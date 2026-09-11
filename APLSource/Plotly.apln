@@ -18,13 +18,26 @@
         '#17becf'  ⍝ blue-teal
     )
 
-    config←{{1=≢⍵:∇1(9÷16)×⊃⍵ ⋄ l←() ⋄ l⊣l.(width height)←2↑⍵}⍣(326≢⎕DR ⍵)⊢⍵}
+    config←{326≡⎕DR ⍵:⍵ ⋄ 1=≢⍵:∇1(9÷16)×⊃⍵ ⋄ l←() ⋄ l⊣l.(width height)←2↑⍵}
 
     data←{
-        ⍺←() ⋄ (,326)≡∪⎕DR¨∊⍵:⍺ ⍵ ⋄ layout←⍺
+        ⍺←() ⋄ layout←⎕NS ⍺
+        NS←{         
+            0≠⍵.⎕NC'type':⍵ ⋄ n←⎕NS ⍵
+            n.type←{
+                ⍵:layout.type ⋄ 0≠⎕NC'z':'surface' ⋄ ⊃∧/0≠⎕NC¨'yx':'scatter'
+                'bar'
+            }0≠layout.⎕NC'type'
+            n←{0≠n.⎕NC'mode':n ⋄ ~⍵:n ⋄ n.mode←layout.mode ⋄ n}0≠layout.⎕NC'mode'
+            0∊80|⎕DR∊n ⎕VGET⊂(,'x')0:n ⎕NS(type:'bar' ⋄ orientation:'v')
+            0∊80|⎕DR∊n ⎕VGET⊂(,'y')0:n ⎕NS(type:'bar' ⋄ orientation:'h')
+            n
+        } 
+        (,326)≡∪⎕DR¨∊⍵:(layout⊣layout.⎕EX'type' 'mode')(NS¨⍵)
         pts←{(2=≡⍵)∧(1∧.=≡¨⍵)∧(2∧.=≢¨⍵)∨(0=80|⎕DR⊃⍵)∧2∧.=≢¨1↓⍵}
         inv←{0=80|⎕DR⊃⍵:(1↑⍵),∇1↓⍵ ⋄ ↓⍉↑⍵}
         (⍺ ⎕VGET⊂'barmode' 'group'){
+            (2=≡⍵)∧0=≢⍴⍵:layout(type:'histogram' ⋄ x:⊃⍵)
             2=≢⍴⍵:layout(type:'surface' ⋄ z:↓⍵)
             1=≡⍵:layout(type:'bar' ⋄ y:⍵ ⋄ x:⍳≢⍵)
             (3=≡⍵)∧∧/pts¨⍵:∇ inv¨⍵⊣layout ⎕NS←(mode:'markers')
@@ -32,14 +45,8 @@
             0=80|⎕DR∊⊃⍵:'stack'∇ ¯1(↓,(1↑⍵),↑)¨⊂¨⍣(2=≡1↓⍵)⊢1↓⍵
             ((1=≡)∨0=80|⎕DR∘∊)⊃⌽⍵:'stack'∇,∘(¯1↑⍵)¨⊂¨⍣(2=≡¯1↓⍵)⊢¯1↓⍵
             1=≡⊃⍵:∇ 1(↑,(1↑⍵),↓)¨⊂¨⍣(2=≡1↓⍵)⊢1↓⍵
-            n←{
-                n←() ⋄ n.(name y x)←¯3↑(⊂''),⍵
-                0∊80|⎕DR∊n.x:n ⎕NS(type:'bar' ⋄ orientation:'v')
-                0∊80|⎕DR∊n.y:n ⎕NS(type:'bar' ⋄ orientation:'h')
-                n.type←{~⍵:'scatter' ⋄ layout.type}0≠layout.⎕NC'type'
-                n←{~⍵:n ⋄ n.mode←layout.mode ⋄ n}0≠layout.⎕NC'mode'
-                n
-            }¨⍵
+            n←NS∘{n←() ⋄ n.(name y x)←¯3↑(⊂''),⍵ ⋄ n}¨⍵
+            _←layout.⎕EX'type' 'mode'
             1≥+/n.type≡¨⊂'bar':layout n
             layout.barmode←⍺ ⋄ layout n
         }⍵
@@ -50,10 +57,12 @@
         
         ⍝ configuration and shape
         c←config ⍺ ⋄ r←¯2↑1,⍴⍵
-        c ⎕NS←(grid:(rows:⊃r ⋄ columns:⊃⌽r ⋄ pattern:'independent'))
 
         ⍝ set axis of each plot
-        d←{(xaxis:'x',⍕⍵ ⋄ yaxis:'y',⍕⍵)(⎕NS,)⍨¨⍵⊃d}¨⍳≢d←,r⍴⊃∘⌽⍤data¨⍵
+        d←c(⊃∘⌽data)¨⍵
+        d←{(xaxis:'x',⍕⍵ ⋄ yaxis:'y',⍕⍵)(⎕NS,)⍨¨⍵⊃d}¨⍳≢d←,r⍴d
+
+        c ⎕NS←(grid:(rows:⊃r ⋄ columns:⊃⌽r ⋄ pattern:'independent'))
         c(d⍴⍨⍴⍵)
     }
 

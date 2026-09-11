@@ -8,12 +8,13 @@
               2=≢⍴⍵:⍵
               ~(N ⍵)∨(1=≡⍵)∧∧/N¨⍵:⍵
               s←{
-                  t←⍵ ⎕VGET(⊂'type' 'scatter')
+                  'histogram'≡t←⍵ ⎕VGET(⊂'type' 'scatter'):t ⍵.x
                   l←(⊂'false')≢⍵ ⎕VGET(⊂'showlegend'(⊂'true'))
                   l∧(⊂'name')∊⍵.⎕NL-2:t ⍵.(name y x)
                   t({0::⍵.y ⋄ ⍵.(y x)}⍵)
               }¨⍵
               1<≢t←∪⊃¨s:⎕SIGNAL 6 ⋄ t←⊃t ⋄ s←⊃∘⌽¨s
+              'histogram'≡t:s
               ('bar'≡t)∧~0∊80|⎕DR¨s:⎕SIGNAL 11
               1=≢s:⊃s
               1=≢x←∪⊃∘⌽¨s:(⊂⍣⍺{⊃⍣(2=≢⍵)⊢¯1↓⍵}¨s),x
@@ -30,7 +31,7 @@
       }
 
       table←{
-          ⍺←⊢
+          height←15 ⋄ ⍺←height
           N←{9.1=42 ⎕ATX'⍵'}
           NT←{
               w←'progress'∘≡¨⍺.⎕VGET⊂⊂'formatter' ''
@@ -42,7 +43,8 @@
               0∧.=80|⎕DR¨⍺:⍺ draw.table ⍵.⎕VGET ⍺
               ⍺ NT ⍵.⎕VGET ⍺.field
           }⍵
-          3=⎕NC'⍺':draw.table ⍵
+          1≡2|⎕DR ⍺:⍺ draw._table ⍵
+          1≡N ⍺:(⍺ ⎕VGET⊂'height' height)draw._table ⍵
           ∧/N¨⍺:⍺ NT ⍵
           ⍺ draw.table ⍵
       }

@@ -89,6 +89,7 @@
           r,←⊂''
           r,←⊂'Examples:'
           r,←⊂'    ]Plt y                 ⍝ values as vertical bars'
+          r,←⊂'    ]Plt ⊂y                ⍝ histogram'
           r,←⊂'    ]Plt y x               ⍝ data series'
           r,←⊂'    ]Plt labels x          ⍝ horizontal bars'
           r,←⊂'    ]Plt y labels          ⍝ vertical bars'

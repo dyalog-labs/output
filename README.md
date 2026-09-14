@@ -33,6 +33,7 @@ A number of plot types can be directly generated from arrays. Further control is
 
     Examples:
         ]Plt y                 ⍝ values as vertical bars
+        ]Plt ⊂y                ⍝ values as vertical bars
         ]Plt y x               ⍝ data series
         ]Plt labels x          ⍝ horizontal bars
         ]Plt y labels          ⍝ vertical bars

@@ -30,6 +30,8 @@
           draw.plot w
       }
 
+      multiplot←{⍺←⊢ ⋄ (¯1 1×⊃⌈/,⍴¨p)∘↑¨p←⍺ plot¨⍵}
+
       table←{
           height←15 ⋄ ⍺←height
           N←{9.1=42 ⎕ATX'⍵'}

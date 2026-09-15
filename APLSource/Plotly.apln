@@ -4,7 +4,8 @@
  
     head←'<script src="https://cdn.plot.ly/plotly-3.6.0.min.js" charset="utf-8"></script>'
 
-    color←{(color:⍵)}¨(  
+    color←{0≠80|⎕DR⍵:∇'#',⊃,/((⎕D,⎕A)⌷⍨∘⊂⎕IO+16 16∘⊤)¨⍵ ⋄ (color:⍵)}
+    colors←color¨(  
         ⍝ https://github.com/plotly/plotly.js/blob/main/src/components/color/attributes.js
         '#1f77b4'  ⍝ muted blue
         '#ff7f0e'  ⍝ safety orange
@@ -17,6 +18,8 @@
         '#bcbd22'  ⍝ curry yellow-green
         '#17becf'  ⍝ blue-teal
     )
+    font←{0=⎕NC'⍺':(size:⍵) ⋄ (family:⍺ ⋄ size:⍵)}
+    title←{(title:(text:⍵))}
 
     config←{326≡⎕DR ⍵:⍵ ⋄ 1=≢⍵:∇1(9÷16)×⊃⍵ ⋄ l←() ⋄ l⊣l.(width height)←2↑⍵}
 

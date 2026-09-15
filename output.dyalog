@@ -16,6 +16,7 @@
     plottxt←⎕SE.Output.Text.plot
     plottxtm←⎕SE.Output.Text.multiplot
     tabletxt←⎕SE.Output.Text.table
+    tabletxtm←⎕SE.Output.Text.multitable
     centertxt←⎕SE.Output.Text.draw.center
     htabulator←⎕SE.Output.Tabulator.head
     tabulator←⎕SE.Output.Tabulator.table
@@ -59,7 +60,7 @@
       :Case 'Tbl'
           :Select type'tabulator'
           :Case 'text'
-            r←center config{⍺←⊢ ⋄ parms.m:⍺ tabletxt¨⍵ ⋄ ⍺ tabletxt ⍵}##.THIS⍎expr
+            r←center config{⍺←⊢ ⋄ parms.m:⍺ tabletxtm ⍵ ⋄ ⍺ tabletxt ⍵}##.THIS⍎expr
           :Case 'ns'
             r←config{⍺←⊢ ⋄ parms.m:⍺ tabulatorns¨⍵ ⋄ ⍺ tabulatorns ⍵}##.THIS⍎expr
           :Case 'tabulator'

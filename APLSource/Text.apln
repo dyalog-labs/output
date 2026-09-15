@@ -30,10 +30,10 @@
           draw.plot w
       }
 
-      multiplot←{⍺←⊢ ⋄ (¯1 1×⊃⌈/,⍴¨p)∘↑¨p←⍺ plot¨⍵}
+      multiplot←{⍺←⊢ ⋄ ⍺({¯1×⌈/⊃∘⍴¨⍵}⍛(↑¨)⍤1 plot¨)@(0≠80|⎕DR¨)⍵}
 
       table←{
-          height←15 ⋄ ⍺←height
+          height←12 ⋄ ⍺←height
           N←{9.1=42 ⎕ATX'⍵'}
           NT←{
               w←'progress'∘≡¨⍺.⎕VGET⊂⊂'formatter' ''
@@ -50,5 +50,7 @@
           ∧/N¨⍺:⍺ NT ⍵
           ⍺ draw.table ⍵
       }
+
+      multitable←{⍺←12⌊4⌈⌈20÷⊃¯2↑1,⍴⍵ ⋄ ⍺ table¨@(0≠80|⎕DR¨)⍵}
 
 :EndNamespace

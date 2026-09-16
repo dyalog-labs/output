@@ -2,26 +2,15 @@
 ⍝ user commands
 
     ⎕IO←1 ⋄ ⎕ML←1
-    ⎕SE.Tatin.LoadDependencies⊂'[MyUCMDs]/Output'
+    ⎕SE.Tatin.LoadDependencies⊂'[MyUCMDs]Output'
     ⎕SE.Output.Text.draw←⎕SE.Output.textdraw
     ⎕SE.Output.⎕EX'textdraw'
 
     :Section RENDER
-    html←⎕SE.Output.Html
-    hplotly←⎕SE.Output.Plotly.head
-    plotly←⎕SE.Output.Plotly.plot
-    plotlym←⎕SE.Output.Plotly.multiplot
-    plotlyns←⎕SE.Output.Plotly.data
-    plotlynsm←⎕SE.Output.Plotly.multidata
-    plottxt←⎕SE.Output.Text.plot
-    plottxtm←⎕SE.Output.Text.multiplot
-    tabletxt←⎕SE.Output.Text.table
-    tabletxtm←⎕SE.Output.Text.multitable
-    centertxt←⎕SE.Output.Text.draw.center
-    htabulator←⎕SE.Output.Tabulator.head
-    tabulator←⎕SE.Output.Tabulator.table
-    tabulatorm←⎕SE.Output.Tabulator.multitable
-    tabulatorns←⎕SE.Output.Tabulator.config
+    Html←⎕SE.Output.Html
+    Plt←⎕SE.Output.Plotly
+    Tbl←⎕SE.Output.Tabulator
+    Txt←⎕SE.Output.Text
     :EndSection
 
     :Section UCMD
@@ -41,31 +30,31 @@
       :If parms.window≡0 ⋄ window←⊢ ⋄ :Else ⋄ window←##.THIS⍎parms.window ⋄ :EndIf
       :If 3≠⎕NC'window' ⋄ :AndIf 1=≢window ⋄ window,←⌊0.5+window×16÷9 ⋄ :EndIf
       :If 0=80|⎕DR parms.t ⋄ parms.t←⍎parms.t ⋄ :EndIf
-      center←window∘centertxt⍣(⊃3≠⎕NC'window')
+      center←window∘Txt.draw.center⍣(⊃3≠⎕NC'window')
       type←{parms.t:'text' ⋄ 0≡parms.type:⍵ ⋄ parms.type}
       expr←'^ +| +$'⎕R''⊢'(^\s*-[tm]\s+)*'⎕R''⍤('^\s*-\w+=(\S+|(''[^'']*?'')+)'⎕R'')⍣≡input
       :Select cmd
       :Case 'Plt'
           :Select type'plotly'
           :Case 'text'
-            r←center config{⍺←⊢ ⋄ parms.m:⍺ plottxtm ⍵ ⋄ ⍺ plottxt ⍵}##.THIS⍎expr
+            r←center config{⍺←⊢ ⋄ parms.m:⍺ Txt.multiplot ⍵ ⋄ ⍺ Txt.plot ⍵}##.THIS⍎expr
           :Case 'ns'
-            r←config{⍺←⊢ ⋄ parms.m:⍺ plotlynsm ⍵ ⋄ ⍺ plotlyns ⍵}##.THIS⍎expr
+            r←config{⍺←⊢ ⋄ parms.m:⍺ Plt.multidata ⍵ ⋄ ⍺ Plt.data ⍵}##.THIS⍎expr
           :Case 'plotly'
-            out←config{⍺←⊢ ⋄ parms.m:⍺ plotlym ⍵ ⋄ ⍺ plotly ⍵}##.THIS⍎expr
-            out←window html&1 HTML expr hplotly out
+            out←config{⍺←⊢ ⋄ parms.m:⍺ Plt.multiplot ⍵ ⋄ ⍺ Plt.plot ⍵}##.THIS⍎expr
+            out←window Html&1 HTML expr Plt.head out
           :Else
             ⎕SIGNAL 6
           :EndSelect
       :Case 'Tbl'
           :Select type'tabulator'
           :Case 'text'
-            r←center config{⍺←⊢ ⋄ parms.m:⍺ tabletxtm ⍵ ⋄ ⍺ tabletxt ⍵}##.THIS⍎expr
+            r←center config{⍺←⊢ ⋄ parms.m:⍺ Txt.multitable ⍵ ⋄ ⍺ Txt.table ⍵}##.THIS⍎expr
           :Case 'ns'
-            r←config{⍺←⊢ ⋄ parms.m:⍺ tabulatorns¨⍵ ⋄ ⍺ tabulatorns ⍵}##.THIS⍎expr
+            r←config{⍺←⊢ ⋄ parms.m:⍺ Tbl.config¨⍵ ⋄ ⍺ Tbl.config ⍵}##.THIS⍎expr
           :Case 'tabulator'
-            out←config{⍺←⊢ ⋄ parms.m:⍺ tabulatorm ⍵ ⋄ ⍺ tabulator ⍵}##.THIS⍎expr
-            out←window html&HTML expr htabulator out
+            out←config{⍺←⊢ ⋄ parms.m:⍺ Tbl.multitable ⍵ ⋄ ⍺ Tbl.table ⍵}##.THIS⍎expr
+            out←window Html&HTML expr Tbl.head out
           :Else
             ⎕SIGNAL 6
           :EndSelect

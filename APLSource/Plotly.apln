@@ -28,7 +28,7 @@
         NS←{         
             0≠⍵.⎕NC'type':⍵ ⋄ n←⎕NS ⍵
             n.type←{
-                ⍵:layout.type ⋄ 0≠⎕NC'z':'surface' ⋄ ⊃∧/0≠⎕NC¨'yx':'scatter'
+                ⍵:layout.type ⋄ 0≠n.⎕NC'z':'surface' ⋄ ⊃∧/0≠n.⎕NC¨'yx':'scatter'
                 'bar'
             }0≠layout.⎕NC'type'
             n←{0≠n.⎕NC'mode':n ⋄ ~⍵:n ⋄ n.mode←layout.mode ⋄ n}0≠layout.⎕NC'mode'

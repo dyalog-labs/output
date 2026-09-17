@@ -117,9 +117,15 @@ Plotly interface namespace.
 
 - `head` is the HTML header to download plotly script from CDN
 
-- `color` is the default color palette used by plotly
+- `config` returns configuration namespace from either width or height and width
 
-- `configure` returns configuration namespace from either width or height and width
+- `color` returns color namespace from string (`#4080FF`) or RGB values (`64 128 255`)
+
+- `font` returns font namespace from size and optional family
+
+- `title` returns title namespace from text
+
+- `colors` contains the default color palette used by plotly
 
 #### `⎕SE.Output.Tabulator`
 

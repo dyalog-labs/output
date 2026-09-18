@@ -7,8 +7,10 @@ or generate simple text versions using [textdraw](https://github.com/dyalog-labs
 
 Install with [Tatin](https://tatin.dev/):
 
-    ]Tatin.InstallPackages [tatin-test]dyalog_labs-output [MyUCMDs]
+    ]TATIN.InstallPackages [tatin-test]dyalog_labs-output [MyUCMDs]
+    ]TATIN.InstallPackages [tatin-test]dyalog_labs-textdraw [MyUCMDs]/Output
     ]UReset
+```
 
 ## `]Plt`
 

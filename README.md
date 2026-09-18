@@ -7,6 +7,7 @@ or generate simple text versions using [textdraw](https://github.com/dyalog-labs
 
 Install with [Tatin](https://tatin.dev/):
 
+```
     ]TATIN.InstallPackages [tatin-test]dyalog_labs-output [MyUCMDs]
     ]TATIN.InstallPackages [tatin-test]dyalog_labs-textdraw [MyUCMDs]/Output
     ]UReset
@@ -18,6 +19,7 @@ The `Plt` command shows data as a plot. Plots will be generated using the javasc
 
 A number of plot types can be directly generated from arrays. Further control is possible using namespaces for configuration. Namespaces will be passed to the rendering library as JSON (see [`⎕JSON`](https://docs.dyalog.com/20.0/language-reference-guide/system-functions/json/)), so [any option supported by plotly](https://plotly.com/javascript/reference/) is valid when plotly is used, while a subset is supported by textdraw (in addition to `x`, `y` and `name`, `width`, `height`, the graph `type`s `scatter` and `bar`, and the `stack` option for `barmode` and `group`).
 
+```
     ]OUT.Plt
 
     Plot data
@@ -59,6 +61,7 @@ A number of plot types can be directly generated from arrays. Further control is
         ]Plt -c=layout ∊data   ⍝ plot
 
     See https://plotly.com/javascript/reference/ for more options
+```
 
 ## `]Tbl`
 
@@ -66,6 +69,7 @@ The `Tbl` command shows data as a table. Tables will be generated using the java
 
 Simple tables can be directly generated from arrays. Further control is possible using namespaces for configuration. Namespaces will be passed to the rendering library as JSON (see [`⎕JSON`](https://docs.dyalog.com/20.0/language-reference-guide/system-functions/json/)), so [any option supported by tabulator](https://tabulator.info/docs/6.4/columns) is valid when tabulator is used, while a subset is supported by textdraw (in addition to `field` and `title`, the `formatter` option can be set to `progress`).
 
+```
     ]OUT.Tbl
 
     Tabulate data
@@ -96,6 +100,7 @@ Simple tables can be directly generated from arrays. Further control is possible
         ]tbl -t -c=columns.title td.(name age dob)  ⍝ column titles as config
 
     See https://tabulator.info/docs/6.4/columns for more options
+```
 
 ## `⎕SE.Output`
 

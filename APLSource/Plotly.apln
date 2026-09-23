@@ -80,6 +80,8 @@
         default_layout←(
             barmode:'group'
             margin:(t:10 ⋄ b:40 ⋄ l:40 ⋄ r:10)
+            xaxis:(automargin:⊂'true')
+            yaxis:(automargin:⊂'true')
         )    
         sl←⊂'false'⊣⍣(0∧.=≢¨ns ⎕VGET(⊂'name' ''))⊢'true'
         default_layout ⎕VSET←⊂'showlegend' sl

@@ -13,7 +13,12 @@
                   l←(⊂'false')≢⍵ ⎕VGET(⊂'showlegend'(⊂'true'))
                   ('box'≡t)∧l∧n:t((⍵ ⎕VGET⊂'name' '')(⊂⍵ ⎕VGET⊂(,'x')(⍵ ⎕VGET⊂(,'y')⍬)))
                   'box'≡t:t(⊂⍵ ⎕VGET⊂(,'x')(⍵ ⎕VGET⊂(,'y')⍬))
-                  l∧n:t((⊂⍵ ⎕VGET⊂'name' ''),⍵.(y x))
+                  l∧n:{
+                      name←⊂⍵ ⎕VGET⊂'name' ''
+                      'points'≡⍵ ⎕VGET(⊂'mode' 'lines'):t(name,↓⍉↑⍵.(y x))
+                      t(name,⍵.(y x))
+                  }⍵
+                  'points'≡⍵ ⎕VGET(⊂'mode' 'lines'):t(↓⍉↑⍵.(y x))
                   t({0::⍵.y ⋄ ⍵.(y x)}⍵)
               }¨⍵
               1<≢t←∪⊃¨s:⎕SIGNAL 6 ⋄ t←⊃t ⋄ s←⊃∘⌽¨s
@@ -28,6 +33,7 @@
           ⍺←()
           ~N ⍺:⍺ draw.plot 0 A ⍵
           0≠⍺.⎕NC'type':a∇⍵ ⎕VSET¨⊂⊂'type'(⍺.type)⊣a.⎕EX'type'⊣a←⎕NS ⍺
+          0≠⍺.⎕NC'mode':a∇⍵ ⎕VSET¨⊂⊂'mode'(⍺.mode)⊣a.⎕EX'mode'⊣a←⎕NS ⍺
           w←('stack'≡⍺ ⎕VGET⊂'barmode' 'group')A ⍵ ⋄ nl←⍺.⎕NL-2
           ∧/'height' 'width'∊nl:⍺.(height width)draw.plot w
           (⊂'height')∊nl:⍺.height draw.plot w

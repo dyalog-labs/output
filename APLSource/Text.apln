@@ -11,7 +11,7 @@
               s←{
                   'histogram'≡t←⍵ ⎕VGET(⊂'type' 'scatter'):t ⍵.x
                   l←(⊂'false')≢⍵ ⎕VGET(⊂'showlegend'(⊂'true'))
-                  ('box'≡t)∧l∧n:t((⍵ ⎕VGET⊂'name' '')(⊂⍵ ⎕VGET⊂(,'x')(⍵ ⎕VGET⊂(,'y')⍬)))
+                  ('box'≡t)∧n:t((⍵ ⎕VGET⊂'name' '')(⊂⍵ ⎕VGET⊂(,'x')(⍵ ⎕VGET⊂(,'y')⍬)))
                   'box'≡t:t(⊂⍵ ⎕VGET⊂(,'x')(⍵ ⎕VGET⊂(,'y')⍬))
                   l∧n:{
                       name←⊂⍵ ⎕VGET⊂'name' ''

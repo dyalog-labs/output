@@ -80,10 +80,10 @@
               0∧.=80|⎕DR¨⍺:⍺ draw.table ⍵.⎕VGET ⍺
               ⍺ NT ⍵.⎕VGET ⍺.field
           }⍵
-          1≡2|⎕DR ⍺:⍺ draw._table ⍵
-          1≡N ⍺:(⍺ ⎕VGET⊂'height' height)draw._table ⍵
+          2|⎕DR ⍺:⍺ draw._table ⍵
+          N ⍺:(⍺ ⎕VGET⊂'height' height)draw._table ⍵
           ∧/N¨⍺:⍺ NT ⍵
-          ⍺ draw.table ⍵
+          ⍺(height draw._table)⍵
       }
 
       multitable←{⍺←12⌊4⌈⌈20÷⊃¯2↑1,⍴⍵ ⋄ ⍺ table¨@(0≠80|⎕DR¨)⍵}

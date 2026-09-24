@@ -20,6 +20,9 @@
     )
     font←{0=⎕NC'⍺':(size:⍵) ⋄ (family:⍺ ⋄ size:⍵)}
     title←{(title:(text:⍵))}
+    axis←{⍺←() ⋄ (⎕NS ⍺)⎕VSET⊂(⍺⍺,'axis',⍕''⊣⍣(1=⍵⍵)⊢⍵⍵)(title ⍵)}
+    xaxis←{⍺←⊢ ⋄ a←⍺ ⋄ ⍵{a('x'axis ⍵)⍺}¨⍳≢⍵}
+    yaxis←{⍺←⊢ ⋄ a←⍺ ⋄ ⍵{a('y'axis ⍵)⍺}¨⍳≢⍵}
 
     config←{326≡⎕DR ⍵:⍵ ⋄ 1=≢⍵:∇1(9÷16)×⊃⍵ ⋄ l←() ⋄ l⊣l.(width height)←2↑⍵}
 

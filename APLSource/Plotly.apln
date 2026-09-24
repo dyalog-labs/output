@@ -21,8 +21,8 @@
     font←{0=⎕NC'⍺':(size:⍵) ⋄ (family:⍺ ⋄ size:⍵)}
     title←{(title:(text:⍵))}
     axis←{⍺←() ⋄ (⎕NS ⍺)⎕VSET⊂(⍺⍺,'axis',⍕''⊣⍣(1=⍵⍵)⊢⍵⍵)(title ⍵)}
-    xaxis←{⍺←⊢ ⋄ a←⍺ ⋄ ⍵{a('x'axis ⍵)⍺}¨⍳≢⍵}
-    yaxis←{⍺←⊢ ⋄ a←⍺ ⋄ ⍵{a('y'axis ⍵)⍺}¨⍳≢⍵}
+    xaxis←{⍺←⊢ ⋄ ⎕NS ⍺,⍵{('x'axis ⍵)⍺}¨⍳≢⍵}
+    yaxis←{⍺←⊢ ⋄ ⎕NS ⍺,⍵{('y'axis ⍵)⍺}¨⍳≢⍵}
 
     config←{326≡⎕DR ⍵:⍵ ⋄ 1=≢⍵:∇1(9÷16)×⊃⍵ ⋄ l←() ⋄ l⊣l.(width height)←2↑⍵}
 
@@ -70,11 +70,11 @@
         c←config ⍺ ⋄ r←¯2↑1,⍴⍵
 
         ⍝ set axis of each plot
-        d←c(⊃∘⌽data)¨⍵
-        d←{(xaxis:'x',⍕⍵ ⋄ yaxis:'y',⍕⍵)(⎕NS,)⍨¨⍵⊃d}¨⍳≢d←,r⍴d
+        d←,c(⊃∘⌽data)¨⍵
+        d←{(xaxis:'x',⍕⍵ ⋄ yaxis:'y',⍕⍵)(⎕NS,)⍨¨⍵⊃d}¨⍳≢d
 
         c ⎕NS←(grid:(rows:⊃r ⋄ columns:⊃⌽r ⋄ pattern:'independent'))
-        c(d⍴⍨⍴⍵)
+        (⍴⍵)∘⍴¨c d
     }
 
     plot←{
@@ -108,6 +108,6 @@
         '<div id="',id,'" style="',style,'"></div><script>',script,'</script>'
     }
 
-    multiplot←{⍺←⊢ ⋄ c d←⍺ multidata ⍵ ⋄ c plot⌽∊d}
+    multiplot←{⍺←⊢ ⋄ c d←⍺ multidata ⍵ ⋄ (⎕NS,c)plot⌽∊d}
 
 :EndNamespace

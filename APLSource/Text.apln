@@ -30,19 +30,40 @@
               1=≢y←∪¯2⊃⍤↑¨s:y,(⊂⍣⍺{2=≢⍵:⊃⌽⍵ ⋄ (¯2↓⍵),¯1↑⍵}¨s)
               s
           }
-          ⍺←()
-          ~N ⍺:⍺ draw.plot 0 A ⍵
+          ⍺←() ⋄ a←⍺ ⋄ ax←ay←0
+          P←{
+            ⍺←⊢ ⋄ p←⍺ draw.plot ⍵ ⋄ ~ax∨ay:p
+            ~ax:a.yaxis.title.text draw.yaxis p
+            p draw.xaxis⍨←a.xaxis.title.text ⋄ ~ay:p
+            a.yaxis.title.text draw.yaxis p
+          }
+          ~N ⍺:⍺ P 0 A ⍵
           0≠⍺.⎕NC'type':a∇⍵ ⎕VSET¨⊂⊂'type'(⍺.type)⊣a.⎕EX'type'⊣a←⎕NS ⍺
           0≠⍺.⎕NC'mode':a∇⍵ ⎕VSET¨⊂⊂'mode'(⍺.mode)⊣a.⎕EX'mode'⊣a←⎕NS ⍺
-          w←('stack'≡⍺ ⎕VGET⊂'barmode' 'group')A ⍵ ⋄ nl←⍺.⎕NL-2
-          ∧/'height' 'width'∊nl:⍺.(height width)draw.plot w
-          (⊂'height')∊nl:⍺.height draw.plot w
-          (⊂'width')∊nl:⍺.width draw.plot w
-          draw.plot w
+          w←('stack'≡⍺ ⎕VGET⊂'barmode' 'group')A ⍵ ⋄ nl←⍺.⎕NL-2 9
+          ax ay←'xaxis' 'yaxis'∊nl
+          ∧/'height' 'width'∊nl:⍺.(height width)P w
+          (⊂'height')∊nl:⍺.height P w
+          (⊂'width')∊nl:⍺.width P w
+          P w
       }
 
       multiplot←{
-          ⍺←⊢ ⋄ 1=≢⍴⍵:⍺∇⍉⍪⍵ ⋄ t←0=80|⎕DR¨⍵ ⋄ p←(⍴⍵)⍴⍺ plot¨@(~t⍨)⍵
+          ⍺←() ⋄ 1=≢⍴⍵:⍺∇⍉⍪⍵
+          
+          ⍝ axes
+          n←'axis'∘,¨⍕¨(⊂'')@(1∘=)(1-⎕IO)+⍳≢,⍵ ⋄ r←⍴⍵
+          c←{
+            9.1≠42 ⎕ATX'⍵':⍵
+            ax←∨/('x',¨n)∊⍵.⎕NL-9 ⋄ ay←∨/('y',¨n)∊⍵.⎕NL-9
+            ~ax∨ay:⍵  ⋄ c←⎕NS ⍵
+            A←{a←⍺,¨n ⋄ ({()}⎕VSET∘⊂(1↑a),⊂)¨⍵ ⎕VGET(↑a)(title:(text:''))}
+            ~ay:c(⎕NS,)¨(c.⎕EX('x',¨n))⊢'x'A ⍵
+            cy←(c.⎕EX('y',¨n))⊢'y'A ⍵
+            ~ax:c(⎕NS,)¨cy ⋄ cy(⎕NS c,,)¨(c.⎕EX('x',¨n))⊢'x'A ⍵
+          }⍺
+
+          t←0=80|⎕DR¨⍵ ⋄ p←(⍴⍵)⍴c plot¨@(~t⍨)⍵
           (t~∘,⍛/,t{-(⌈/0@(t⍨)⊃∘⍴¨⍵)∘.,⌈⌿0@(t⍨)⊃∘⌽∘⍴¨⍵}p)↑¨@(~t⍨)p
       }
 

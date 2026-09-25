@@ -78,7 +78,20 @@
     }
 
     plot←{
-        ⍺←()
+        ⍺←()   
+        
+        ⍝ "spark" plot
+        (2=≢⍴⍵)∧0=80|⎕DR∊1↑⍵:⍺{
+            T←0=80|⎕DR∘∊ ⋄ t←T¨d←↓⍉1↓⍵ ⋄ c←config ⍺
+            _←{c⎕VSET⊂('yaxis',⍕⍵)(showticklabels:⊂'false')}¨⍸t
+            d←(,1↑⍵){
+                t←T ⍵
+                (name:⍺ ⋄ type:'bar' ⋄ y:(∪⍳⊢)⍣t⊢⍵ ⋄ marker:⍵{
+                    (color:((⊃⌽∘colors)¨(∪⍛⍳⍺)-1).color)
+                }⍣t⊢())
+            }¨d
+            c multiplot⍪d
+        }⍵
 
         ⍝ non-namespace left argument
         layout ns←(config ⍺)data ⍵

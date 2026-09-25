@@ -48,6 +48,17 @@
             (2=|≡⍵)∧b∧0=80|⎕DR∊⊃⍵:layout((⊃⍵)box¨1↓⍵)⊣layout.⎕EX'type'
             (2=|≡⍵)∧b:layout((⍳≢⍵)box¨⍵)⊣layout.⎕EX'type'
             (2=≡⍵)∧0=≢⍴⍵:layout(type:'histogram' ⋄ x:⊃⍵)
+            (2=≢⍴⍵)∧0=80|⎕DR∊1↑⍵:layout{
+                T←0=80|⎕DR∘∊ ⋄ t←T¨d←↓⍉1↓⍵ ⋄ c←config ⍺
+                _←{c⎕VSET⊂('yaxis',⍕⍵)(showticklabels:⊂'false')}¨⍸t
+                d←(,1↑⍵){
+                    t←T ⍵
+                    (name:⍺ ⋄ type:'bar' ⋄ y:(∪⍳⊢)⍣t⊢⍵ ⋄ marker:⍵{
+                        (color:((⊃⌽∘colors)¨(∪⍛⍳⍺)-1).color)
+                    }⍣t⊢())
+                }¨d
+                c multidata⍪d
+            }⍵
             2=≢⍴⍵:layout(type:'surface' ⋄ z:↓⍵)
             1=≡⍵:layout(type:'bar' ⋄ y:⍵ ⋄ x:⍳≢⍵)
             (3=|≡⍵)∧0∧.=≢∘⍴¨1↓⍣(0=80|⎕DR∊⊃⍵)⊢⍵:∇⊃¨@(0≠80|⎕DR∘∊¨)⍵⊣layout ⎕NS←(type:'box')
@@ -80,18 +91,8 @@
     plot←{
         ⍺←()   
         
-        ⍝ "spark" plot
-        (2=≢⍴⍵)∧0=80|⎕DR∊1↑⍵:⍺{
-            T←0=80|⎕DR∘∊ ⋄ t←T¨d←↓⍉1↓⍵ ⋄ c←config ⍺
-            _←{c⎕VSET⊂('yaxis',⍕⍵)(showticklabels:⊂'false')}¨⍸t
-            d←(,1↑⍵){
-                t←T ⍵
-                (name:⍺ ⋄ type:'bar' ⋄ y:(∪⍳⊢)⍣t⊢⍵ ⋄ marker:⍵{
-                    (color:((⊃⌽∘colors)¨(∪⍛⍳⍺)-1).color)
-                }⍣t⊢())
-            }¨d
-            c multiplot⍪d
-        }⍵
+        ⍝ ⍝ "spark" plot
+        (2=≢⍴⍵)∧0=80|⎕DR∊1↑⍵:(⎕NS,c)plot⌽∊d⊣c d←⍺ data ⍵
 
         ⍝ non-namespace left argument
         layout ns←(config ⍺)data ⍵

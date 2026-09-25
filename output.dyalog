@@ -100,6 +100,8 @@
           r,←⊂'    ]Plt labels(x2 x1)     ⍝ stacked horizontal bars'
           r,←⊂'    ]Plt y2 y1 labels      ⍝ grouped vertical bars'
           r,←⊂'    ]Plt (y2 y1)labels     ⍝ stacked vertical bars'
+          r,←⊂'    ]Plt ⍪z                ⍝ 3D plot'
+          r,←⊂'    ]Plt labels⍪⍪z         ⍝ spark-line by column'
           r,←⊂''
           r,←⊂'    ]Plt -t y x            ⍝ data series as text'
           r,←⊂'    ]Plt -t y labels       ⍝ vertical bars as text'

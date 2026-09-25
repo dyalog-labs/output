@@ -35,25 +35,33 @@
       expr←'^ +| +$'⎕R''⊢'(^\s*-[tm]\s+)*'⎕R''⍤('^\s*-\w+=(\S+|(''[^'']*?'')+)'⎕R'')⍣≡input
       :Select cmd
       :Case 'Plt'
+	  	  input←##.THIS⍎expr
+		  :If 0=80|⎕DR input ⋄ out←window Html&1 HTML expr Plt.head input ⋄ →0 ⋄ :EndIf
           :Select type'plotly'
           :Case 'text'
-            r←center config{⍺←⊢ ⋄ parms.m:⍺ Txt.multiplot ⍵ ⋄ ⍺ Txt.plot ⍵}##.THIS⍎expr
+            r←center config{⍺←⊢ ⋄ parms.m:⍺ Txt.multiplot ⍵ ⋄ ⍺ Txt.plot ⍵}input
           :Case 'ns'
-            r←config{⍺←⊢ ⋄ parms.m:⍺ Plt.multidata ⍵ ⋄ ⍺ Plt.data ⍵}##.THIS⍎expr
+            r←config{⍺←⊢ ⋄ parms.m:⍺ Plt.multidata ⍵ ⋄ ⍺ Plt.data ⍵}input
           :Case 'plotly'
-            out←config{⍺←⊢ ⋄ parms.m:⍺ Plt.multiplot ⍵ ⋄ ⍺ Plt.plot ⍵}##.THIS⍎expr
-            out←window Html&1 HTML expr Plt.head out
+            out←config{⍺←⊢ ⋄ parms.m:⍺ Plt.multiplot ⍵ ⋄ ⍺ Plt.plot ⍵}input
+			:If 3=⎕NC'window' ⋄ :AndIf (2=≢⍴input)∧0=80|⎕DR∊1↑input
+				out←(96×≢⍉input)1024 Html&1 HTML expr Plt.head out
+			:Else
+	            out←window Html&1 HTML expr Plt.head out
+			:EndIf
           :Else
             ⎕SIGNAL 6
           :EndSelect
       :Case 'Tbl'
+	  	  input←##.THIS⍎expr
+		  :If 0=80|⎕DR input ⋄ out←window Html&HTML expr Tbl.head input ⋄ →0 ⋄ :EndIf
           :Select type'tabulator'
           :Case 'text'
-            r←center config{⍺←⊢ ⋄ parms.m:⍺ Txt.multitable ⍵ ⋄ ⍺ Txt.table ⍵}##.THIS⍎expr
+            r←center config{⍺←⊢ ⋄ parms.m:⍺ Txt.multitable ⍵ ⋄ ⍺ Txt.table ⍵}input
           :Case 'ns'
-            r←config{⍺←⊢ ⋄ parms.m:⍺ Tbl.config¨⍵ ⋄ ⍺ Tbl.config ⍵}##.THIS⍎expr
+            r←config{⍺←⊢ ⋄ parms.m:⍺ Tbl.config¨⍵ ⋄ ⍺ Tbl.config ⍵}input
           :Case 'tabulator'
-            out←config{⍺←⊢ ⋄ parms.m:⍺ Tbl.multitable ⍵ ⋄ ⍺ Tbl.table ⍵}##.THIS⍎expr
+            out←config{⍺←⊢ ⋄ parms.m:⍺ Tbl.multitable ⍵ ⋄ ⍺ Tbl.table ⍵}input
             out←window Html&HTML expr Tbl.head out
           :Else
             ⎕SIGNAL 6

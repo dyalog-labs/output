@@ -64,7 +64,8 @@
           }⍺
 
           t←0=80|⎕DR¨⍵ ⋄ p←(⍴⍵)⍴c plot¨@(~t⍨)⍵
-          (t~∘,⍛/,t{-(⌈/0@(t⍨)⊃∘⍴¨⍵)∘.,⌈⌿0@(t⍨)⊃∘⌽∘⍴¨⍵}p)↑¨@(~t⍨)p
+          t←(t~∘,⍛/,t{-(⌈/0@(t⍨)⊃∘⍴¨⍵)∘.,⌈⌿0@(t⍨)⊃∘⌽∘⍴¨⍵}p)↑¨@(~t⍨)p
+          0=⎕NC'box':t ⋄ ~box:⍕t ⋄ ⍕draw.box t
       }
 
       table←{
@@ -86,6 +87,10 @@
           ⍺(height draw._table)⍵
       }
 
-      multitable←{⍺←12⌊4⌈⌈20÷⊃¯2↑1,⍴⍵ ⋄ ⍺ table¨@(0≠80|⎕DR¨)⍵}
+      multitable←{
+          ⍺←12⌊4⌈⌈20÷⊃¯2↑1,⍴⍵
+          t←⍺ table¨@(0≠80|⎕DR¨)⍵
+          0=⎕NC'box':t ⋄ ~box:⍕t ⋄ ⍕draw.box t
+      }
 
 :EndNamespace

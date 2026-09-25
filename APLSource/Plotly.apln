@@ -21,8 +21,10 @@
     font←{0=⎕NC'⍺':(size:⍵) ⋄ (family:⍺ ⋄ size:⍵)}
     title←{(title:(text:⍵))}
     axis←{⍺←() ⋄ (⎕NS ⍺)⎕VSET⊂(⍺⍺,'axis',⍕''⊣⍣(1=⍵⍵)⊢⍵⍵)(title ⍵)}
-    xaxis←{⍺←⊢ ⋄ ⎕NS ⍺,⍵{('x'axis ⍵)⍺}¨⍳≢⍵}
-    yaxis←{⍺←⊢ ⋄ ⎕NS ⍺,⍵{('y'axis ⍵)⍺}¨⍳≢⍵}
+    xaxis←{⍺←⊢ ⋄ ⍺('x'axis ⍺⍺)⍵}
+    yaxis←{⍺←⊢ ⋄ ⍺('y'axis ⍺⍺)⍵}
+    xaxes←{⍺←⊢ ⋄ ⎕NS ⍺,⍵{(⍵ xaxis)⍺}¨⍳≢⍵}
+    yaxes←{⍺←⊢ ⋄ ⎕NS ⍺,⍵{(⍵ yaxis)⍺}¨⍳≢⍵}
 
     config←{326≡⎕DR ⍵:⍵ ⋄ 1=≢⍵:∇1(9÷16)×⊃⍵ ⋄ l←() ⋄ l⊣l.(width height)←2↑⍵}
 

@@ -80,6 +80,9 @@
 
     multidata←{
         ⍺←()
+
+        ⍝ multiple spark plots
+        ⊃∧/{2≠≢⍴⍵:0 ⋄ 0=80|⎕DR∊1↑⍵}¨⍵:⊃∇/⊃,¨/⍺ data¨⍵
         
         ⍝ configuration and shape
         c←config ⍺ ⋄ r←¯2↑1,⍴⍵

@@ -15,16 +15,17 @@
 
       config←{
           2<r←≢⍴⍵:⎕SIGNAL 4
-          (2=r)∧0=⎕NC'⍺':∇{
-              ⊃0∧.=80|⎕DR¨h←,1↑⍵:(↓⍉1↓⍵)⍺⍺⍨h{(field:⍕⍵ ⋄ title:⍺)}¨(⍳≢↓⍉⍵)-⎕IO
-              ⍺⍺ ↓⍉⍵
-          }⍵
+          (2=r)∧0=⎕NC'⍺':()∇⍵
           ⍺←{
               9.1=42 ⎕ATX'⍵':{(field:⍵ ⋄ title:⍵)}¨⍵.⎕NL ¯2
               {(field:⍕⍵)}¨(⍳≢⍵)-⎕IO
           }⍵
           0∧.=80|⎕DR¨⍺:⍵∇⍨⍺{(field:⍕⍵ ⋄ title:⍺)}¨(⍳≢⍵)-⎕IO
           1≡2|⎕DR ⍺:⎕NS(height:⍺)(∇⍵)
+          (2=r)∧0∊⍴∊(,⍺).⎕NL⊂⍳9:∇{
+              ⊃0∧.=80|⎕DR¨h←,1↑⍵:(↓⍉1↓⍵)⍺⍺⍨h{(field:⍕⍵ ⋄ title:⍺)}¨(⍳≢↓⍉⍵)-⎕IO
+              ⍺⍺ ↓⍉⍵
+          }⍵
           ⊃0∧.=⍺.⎕NC⊂'field':⍵∇⍨⍺⎕NS¨⍨{(field:⍕⍵)}¨(⍳≢⍵)-⎕IO
 
           default_config←(layout:'fitColumns')
@@ -41,8 +42,7 @@
       }
 
       multitable←{
-          ⍺←⊢ ⋄ cfg←(⍴⍵)⍴⍺
-          r←¯2↑1,⍴⍵ ⋄ t←r⍴⍵
+          ⍺←() ⋄ r←¯2↑1,⍴⍵ ⋄ cfg←r⍴⍺ ⋄ t←r⍴⍵
           '<table style="width:100%;table-layout:fixed">','</table>',⍨⊃,/{
               '<tr>','</tr>',⍨⊃,/⍵{'<td>','</td>',⍨(⊃cfg[⍺;⍵])table(⊃t[⍺;⍵])}¨⍳⊃⌽r
           }¨⍳⊃r

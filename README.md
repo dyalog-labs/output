@@ -20,47 +20,49 @@ The `Plt` command shows data as a plot. Plots will be generated using the javasc
 A number of plot types can be directly generated from arrays. Further control is possible using namespaces for configuration. Namespaces will be passed to the rendering library as JSON (see [`⎕JSON`](https://docs.dyalog.com/20.0/language-reference-guide/system-functions/json/)), so [any option supported by plotly](https://plotly.com/javascript/reference/) is valid when plotly is used, while a subset is supported by textdraw (in addition to `x`, `y` and `name`, `width`, `height`, the graph `type`s `scatter` and `bar`, and the `stack` option for `barmode` and `group`).
 
 ```
-    ]OUT.Plt
-
-    Plot data
-
-    ]Plt <data> [-type={plotly|text|ns}] [-t] [-m] [-config=<configuration>]
-    <data>        data to plot
-
-    -type=plotly  plot using plotly and HTMLRenderer or Ride (default)
-    -type=text    plot using text
-    -type=ns      return configuration and data namespaces
-    -t            equivalent to -type=text
-    -m            multiple plots from <data> array
-    -config=      configuration namespace of plot size
-    -window=      window size (height or height and width)
-
-    Examples:
-        ]Plt y                 ⍝ values as vertical bars
-        ]Plt ⊂y                ⍝ values as vertical bars
-        ]Plt y x               ⍝ data series
-        ]Plt labels x          ⍝ horizontal bars
-        ]Plt y labels          ⍝ vertical bars
-        ]Plt ↓⍉↑y1 x1          ⍝ plot as points
-        ]Plt (y2 x2)(y1 x1)    ⍝ multiple data series
-        ]Plt -m (y2 x2)(y1 x1) ⍝ multiple plots
-        ]Plt labels x2 x1      ⍝ grouped horizontal bars
-        ]Plt labels(x2 x1)     ⍝ stacked horizontal bars
-        ]Plt y2 y1 labels      ⍝ grouped vertical bars
-        ]Plt (y2 y1)labels     ⍝ stacked vertical bars
-
-        ]Plt -t y x            ⍝ data series as text
-        ]Plt -t y labels       ⍝ vertical bars as text
-
-        c←(xaxis:(title:'X'))  ⍝ config namespace
-        ]Plt -config=c y x     ⍝ data series with config
-        ]Plt -win=1024 y x     ⍝ with window size
-
-        ]ld←Plt -type=ns y x   ⍝ get namespaces
-        layout data←ld         ⍝ layout and data
-        ]Plt -c=layout ∊data   ⍝ plot
-
-    See https://plotly.com/javascript/reference/ for more options
+]OUT.Plt                                                                       
+                                                                               
+Plot data                                                                      
+                                                                               
+]Plt <data> [-type={plotly|text|ns}] [-t] [-m] [-config=<configuration>]       
+<data>        data to plot                                                     
+                                                                               
+-type=plotly  plot using plotly and HTMLRenderer or Ride (default)             
+-type=text    plot using text                                                  
+-type=ns      return configuration and data namespaces                         
+-t            equivalent to -type=text                                         
+-m            multiple plots from <data> array                                 
+-config=      configuration namespace of plot size                             
+-window=      window size (height or height and width)                         
+                                                                               
+Examples:                                                                      
+    ]Plt y                 ⍝ values as vertical bars                           
+    ]Plt ⊂y                ⍝ histogram                                         
+    ]Plt y x               ⍝ data series                                       
+    ]Plt labels x          ⍝ horizontal bars                                   
+    ]Plt y labels          ⍝ vertical bars                                     
+    ]Plt ↓⍉↑y1 x1          ⍝ plot as points                                    
+    ]Plt (y2 x2)(y1 x1)    ⍝ multiple data series                              
+    ]Plt -m (y2 x2)(y1 x1) ⍝ multiple plots                                    
+    ]Plt labels x2 x1      ⍝ grouped horizontal bars                           
+    ]Plt labels(x2 x1)     ⍝ stacked horizontal bars                           
+    ]Plt y2 y1 labels      ⍝ grouped vertical bars                             
+    ]Plt (y2 y1)labels     ⍝ stacked vertical bars                             
+    ]Plt ⍪z                ⍝ 3D plot                                           
+    ]Plt labels⍪⍪z         ⍝ spark-line by column                              
+                                                                               
+    ]Plt -t y x            ⍝ data series as text                               
+    ]Plt -t y labels       ⍝ vertical bars as text                             
+                                                                               
+    c←(xaxis:(title:'X'))  ⍝ config namespace                                  
+    ]Plt -config=c y x     ⍝ data series with config                           
+    ]Plt -win=1024 y x     ⍝ with window size                                  
+                                                                               
+    ]ld←Plt -type=ns y x   ⍝ get namespaces                                    
+    layout data←ld         ⍝ layout and data                                   
+    ]Plt -c=layout ∊data   ⍝ plot                                              
+                                                                               
+See https://plotly.com/javascript/reference/ for more options                  
 ```
 
 ## `]Tbl`
@@ -70,36 +72,36 @@ The `Tbl` command shows data as a table. Tables will be generated using the java
 Simple tables can be directly generated from arrays. Further control is possible using namespaces for configuration. Namespaces will be passed to the rendering library as JSON (see [`⎕JSON`](https://docs.dyalog.com/20.0/language-reference-guide/system-functions/json/)), so [any option supported by tabulator](https://tabulator.info/docs/6.4/columns) is valid when tabulator is used, while a subset is supported by textdraw (in addition to `field` and `title`, the `formatter` option can be set to `progress`).
 
 ```
-    ]OUT.Tbl
-
-    Tabulate data
-
-    ]Tbl <data> [-type={tabulator|text|ns}] [-t] [-m] [-config=<configuration>]
-    <data>           data to tabulate
-
-    -type=tabulator  tabulate using tabulator and HTMLRenderer or Ride
-    -type=text       tabulate using text
-    -type=ns         return namespace
-    -t               equivalent to -type=text
-    -m               multiple tables from <data> array
-    -config=         configuration (or title) for each column
-
-    Examples:
-        ]Tbl y1 y2 y3               ⍝ table with 3 columns
-        ]Tbl (one:y1 ⋄ other:y2)    ⍝ 2 columns with titles
-
-        td←()
-        td.name←'Alice' 'Bob' 'Jonh' 'Sarah'
-        td.age←24 32 10 29
-        td.dob←'14/05/1982' '22/05/1982' '01/08/1980' '31/01/1999'
-        columns←(title:'Name' ⋄ field:'name')
-        columns,←(title:'Age' ⋄ field:'age' ⋄ hozAlign:'left' ⋄ formatter:'progress')
-        columns,←(title:'Date of Birth' ⋄ field:'dob' ⋄ sorter:'date' ⋄ hozAlign:'center')
-        ]tbl -c=columns td     ⍝ tabulator table
-        ]tbl -t -c=columns td  ⍝ text table
-        ]tbl -t -c=columns.title td.(name age dob)  ⍝ column titles as config
-
-    See https://tabulator.info/docs/6.4/columns for more options
+]OUT.Tbl                                                                              
+                                                                                      
+Tabulate data                                                                         
+                                                                                      
+]Tbl <data> [-type={tabulator|text|ns}] [-t] [-m] [-config=<configuration>]           
+<data>           data to tabulate                                                     
+                                                                                      
+-type=tabulator  tabulate using tabulator and HTMLRenderer or Ride                    
+-type=text       tabulate using text                                                  
+-type=ns         return namespace                                                     
+-t               equivalent to -type=text                                             
+-m               multiple tables from <data> array                                    
+-config=         configuration (or title) for each column                             
+                                                                                      
+Examples:                                                                             
+    ]Tbl y1 y2 y3               ⍝ table with 3 columns                                
+    ]Tbl (one:y1 ⋄ other:y2)    ⍝ 2 columns with titles                               
+                                                                                      
+    td←()                                                                             
+    td.name←'Alice' 'Bob' 'Jonh' 'Sarah'                                              
+    td.age←24 32 10 29                                                                
+    td.dob←'14/05/1982' '22/05/1982' '01/08/1980' '31/01/1999'                        
+    columns←(title:'Name' ⋄ field:'name')                                             
+    columns,←(title:'Age' ⋄ field:'age' ⋄ hozAlign:'left' ⋄ formatter:'progress')     
+    columns,←(title:'Date of Birth' ⋄ field:'dob' ⋄ sorter:'date' ⋄ hozAlign:'center')
+    ]tbl -c=columns td     ⍝ tabulator table                                          
+    ]tbl -t -c=columns td  ⍝ text table                                               
+    ]tbl -t -c=columns.title td.(name age dob)  ⍝ column titles as config             
+                                                                                      
+See https://tabulator.info/docs/6.4/columns for more options                          
 ```
 
 ## `⎕SE.Output`
@@ -131,6 +133,12 @@ Plotly interface namespace.
 - `font` returns font namespace from size and optional family
 
 - `title` returns title namespace from text
+
+- `axis` returns or sets axis namespace for left operand direction and right operand axis number
+
+- `xaxis`, `yaxis` returns or sets axis for left operand axis number
+
+- `xaxes`, `yaxes` sets multiple axes
 
 - `colors` contains the default color palette used by plotly
 

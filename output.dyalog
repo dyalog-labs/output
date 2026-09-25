@@ -33,9 +33,9 @@
       center←window∘Txt.draw.center⍣(⊃3≠⎕NC'window')
       type←{parms.t:'text' ⋄ 0≡parms.type:⍵ ⋄ parms.type}
       expr←'^ +| +$'⎕R''⊢'(^\s*-[tm]\s+)*'⎕R''⍤('^\s*-\w+=(\S+|(''[^'']*?'')+)'⎕R'')⍣≡input
+	  input←##.THIS⍎expr
       :Select cmd
       :Case 'Plt'
-	  	  input←##.THIS⍎expr
 		  :If 0=80|⎕DR input ⋄ out←window Html&1 HTML expr Plt.head input ⋄ →0 ⋄ :EndIf
           :Select type'plotly'
           :Case 'text'
@@ -53,7 +53,6 @@
             ⎕SIGNAL 6
           :EndSelect
       :Case 'Tbl'
-	  	  input←##.THIS⍎expr
 		  :If 0=80|⎕DR input ⋄ out←window Html&HTML expr Tbl.head input ⋄ →0 ⋄ :EndIf
           :Select type'tabulator'
           :Case 'text'

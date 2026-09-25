@@ -25,6 +25,8 @@
     yaxis←{⍺←⊢ ⋄ ⍺('y'axis ⍺⍺)⍵}
     xaxes←{⍺←⊢ ⋄ ⎕NS ⍺,⍵{(⍵ xaxis)⍺}¨⍳≢⍵}
     yaxes←{⍺←⊢ ⋄ ⎕NS ⍺,⍵{(⍵ yaxis)⍺}¨⍳≢⍵}
+    legend←(showlegend:⊂'true')
+    nolegend←(showlegend:⊂'false')
 
     config←{326≡⎕DR ⍵:⍵ ⋄ 1=≢⍵:∇1(9÷16)×⊃⍵ ⋄ l←() ⋄ l⊣l.(width height)←2↑⍵}
 

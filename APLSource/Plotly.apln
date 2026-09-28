@@ -65,8 +65,8 @@
         box←{(type:'box' ⋄ name:⍺ ⋄ x:⍵ ⋄ showlegend:⊂'false')}  
         (⍺ ⎕VGET⊂'barmode' 'group'){
             b←'box'≡layout ⎕VGET⊂'type' ''
-            (2=|≡⍵)∧b∧0=80|⎕DR∊⊃⍵:layout((⊃⍵)box¨1↓⍵)⊣layout.⎕EX'type'
-            (2=|≡⍵)∧b:layout((⍳≢⍵)box¨⍵)⊣layout.⎕EX'type'
+            (2≤|≡⍵)∧b∧0=80|⎕DR∊⊃⍵:layout((⊃⍵)box¨1↓⍵)⊣layout.⎕EX'type'
+            (2≤|≡⍵)∧b:layout((⍳≢⍵)box¨⍵)⊣layout.⎕EX'type'
             (2=≡⍵)∧0=≢⍴⍵:layout(type:'histogram' ⋄ x:⊃⍵)
             (2=≢⍴⍵)∧0=80|⎕DR∊1↑⍵:⊃multidata/layout(0 1 spark)⍵
             2=≢⍴⍵:layout(type:'surface' ⋄ z:↓⍵)

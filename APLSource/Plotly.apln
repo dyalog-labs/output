@@ -33,12 +33,13 @@
         d←(,1↑⍵){
             t←0=80|⎕DR∊s←⍵⊃d 
             n←{~t:(tickvals:,⌈/⍵) ⋄ u←≢∪⍵ ⋄ (tickvals:,u ⋄ ticktext:,⊂1↑(u-1)⌽⎕A)}s
-            _←c⎕VSET⊂('yaxis',⍕>∘1⍛/∆+|⍙×⍵-1)n
-            _←c⎕VSET⊂('xaxis',⍕>∘1⍛/∆+|⍙×⍵-1)(showticklabels:⊂'false')
-            l←'false' 'true'[1+(∆=1)∨⍙>0]
-            (name:⍺ ⋄ type:'bar' ⋄ y:(∪⍳⊢)⍣t⊢s ⋄ showlegend:l ⋄ marker:s{
-                (color:((⊃⌽∘colors)¨(∪⍛⍳⍺)-1).color)
-            }⍣t⊃((⍵-1)⊣⍣(⍙<0)⊢(∆-1)+⍙×⍵-1)⌽colors)
+            _←c⎕VSET⊂('yaxis',⍕>∘1⍛/1+∆+(⍵-1)×|⍙)n
+            _←c⎕VSET⊂('xaxis',⍕>∘1⍛/1+∆+(⍵-1)×|⍙)(showticklabels:⊂'false')
+            l←'false' 'true'[1+(∆=0)∨⍙>0] ⋄ c←(∆×⍙>0)+⍵-1
+            (
+                name:⍺ ⋄ type:'bar' ⋄ y:(∪⍳⊢)⍣t⊢s ⋄ showlegend:l
+                marker:s{(color:((⊃⌽∘colors)¨(∪⍛⍳⍺)-1).color)}⍣t⊃c⌽colors
+            )
         }¨⍳≢d
         c(⍪d)
     }
@@ -67,7 +68,7 @@
             (2=|≡⍵)∧b∧0=80|⎕DR∊⊃⍵:layout((⊃⍵)box¨1↓⍵)⊣layout.⎕EX'type'
             (2=|≡⍵)∧b:layout((⍳≢⍵)box¨⍵)⊣layout.⎕EX'type'
             (2=≡⍵)∧0=≢⍴⍵:layout(type:'histogram' ⋄ x:⊃⍵)
-            (2=≢⍴⍵)∧0=80|⎕DR∊1↑⍵:⊃multidata/layout(1 1 spark)⍵
+            (2=≢⍴⍵)∧0=80|⎕DR∊1↑⍵:⊃multidata/layout(0 1 spark)⍵
             2=≢⍴⍵:layout(type:'surface' ⋄ z:↓⍵)
             1=≡⍵:layout(type:'bar' ⋄ y:⍵ ⋄ x:⍳≢⍵)
             (3=|≡⍵)∧0∧.=≢∘⍴¨1↓⍣(0=80|⎕DR∊⊃⍵)⊢⍵:∇⊃¨@(0≠80|⎕DR∘∊¨)⍵⊣layout ⎕NS←(type:'box')
@@ -87,12 +88,13 @@
         ⍺←()
 
         ⍝ multiple spark plots
-        ⊃∧/{2≠≢⍴⍵:0 ⋄ 0=80|⎕DR∊1↑⍵}¨⍵:⊃∇/⊃,¨/⍺{
-            h←1↑¨⍵ ⋄ d←⍵ ⋄ c←(⍴⍵)⍴⍺
-            (1-2×1=≢∪h){(⍵⊃c)(⍵(⍺×≢d)spark)⍵⊃d}¨⍳≢d
-        },⍵
-        
-        ⍝ configuration and shape
+        ⊃∧/{2≠≢⍴⍵:0 ⋄ 0=80|⎕DR∊1↑⍵}¨⍵:⊃∇/{⊃⍪/,/(⊃⌈/≢¨⍵)↑¨⍵}¨⍺{
+            d←,⍵ ⋄ h←1↑¨d ⋄ c←(⍴d)⍴⍺ ⋄ n←⊃⌽⍴⍵
+            ∆←,(1-⍨⍳n)∘.+⍨n×+\0,⌈/≢∘⍉¨⍵ ⋄ ⍙←n×1-2×⊃1=≢∪h
+            (⍴⍵)∘⍴¨↓⍉↑{(⍵⊃c)((⍵⊃∆)⍙ spark)⍵⊃d}¨⍳≢d
+        }⍉⍪⍉⍵
+
+        ⍝ configuration and shape      
         c←config(⍴⍵)⍴⍺ ⋄ r←¯2↑1,⍴⍵
 
         ⍝ set axis of each plot

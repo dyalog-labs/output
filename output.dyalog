@@ -78,7 +78,7 @@
           r,←⊂'-type=ns      return configuration and data namespaces'
           r,←⊂'-t            equivalent to -type=text'
           r,←⊂'-m            multiple plots from <data> array'
-          r,←⊂'-config=      configuration namespace of plot size'
+          r,←⊂'-config=      configuration namespace or plot size'
           r,←⊂'-window=      window size (height or height and width)'
           r,←⊂''
           r,←⊂'Examples:'
